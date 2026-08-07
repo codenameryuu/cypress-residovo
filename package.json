@@ -1,0 +1,17 @@
+{
+  "name": "cypress-residovo",
+  "version": "1.0.0",
+  "description": "Cypress Tests for Residovo",
+  "license": "MIT",
+  "scripts": {
+    "start": "npx cypress open"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "cypress": "^15.14.0",
+    "cypress-mochawesome-reporter": "^4.0.2"
+  },
+  "dependencies": {
+    "luxon": "^3.7.2"
+  }
+}
