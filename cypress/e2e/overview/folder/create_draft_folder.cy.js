@@ -22,13 +22,13 @@ describe("Create Folder Spec", () => {
     // * Type the name
     cy.get("input[name='name']").should("be.visible").type(name).should("have.value", name);
 
-    // * Intercept the create draft API
+    // * Intercept create draft API
     cy.intercept("POST", "**/api/v1/dashboard/draft").as("createDraft");
 
     // * Click on the Done button
     cy.get("button.upload-button-skip:visible:enabled").should("have.length", 1).click();
 
-    // * Wait for the create draft API to be called
+    // * Wait for create draft API to be called
     cy.wait("@createDraft")
       .its("response")
       .should((response) => {

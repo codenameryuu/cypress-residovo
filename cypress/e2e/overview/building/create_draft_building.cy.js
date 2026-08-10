@@ -37,14 +37,14 @@ describe("Create Building Spec", () => {
     // * Type the post code
     cy.get("input[name='postcode']").should("be.visible").type(postCode).should("have.value", postCode);
 
-    // * Intercept the get city API
+    // * Intercept get city API
     cy.intercept("GET", "**/api/v1/master-data/city**").as("getCity");
 
     // * Click on city select button
     cy.get("div.input-custom.mt-3.py-2:visible").filter(':has(img[alt="required"])').first().click();
     cy.wait(1000);
 
-    // * Wait for the get city API to be called
+    // * Wait for get city API to be called
     cy.wait("@getCity")
       .its("response")
       .should((response) => {
@@ -60,13 +60,13 @@ describe("Create Building Spec", () => {
     cy.get("#listCityModal tbody tr").first().click();
     cy.wait(500);
 
-    // * Intercept the create draft API
+    // * Intercept create draft API
     cy.intercept("POST", "**/api/v1/dashboard/draft").as("createDraft");
 
     // * Click on the save draft button
     cy.get("button.upload-button-skip:visible:enabled").should("have.length", 1).click();
 
-    // * Wait for the create draft API to be called
+    // * Wait for create draft API to be called
     cy.wait("@createDraft")
       .its("response")
       .should((response) => {

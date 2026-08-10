@@ -22,13 +22,13 @@ describe("Create Folder Spec", () => {
     // * Type the name
     cy.get("input[name='name']").should("be.visible").type(name).should("have.value", name);
 
-    // * Intercept the create category API
+    // * Intercept create category API
     cy.intercept("POST", "**/api/v1/dashboard/category").as("createCategory");
 
     // * Click on the Done button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
-    // * Wait for the create category API to be called
+    // * Wait for create category API to be called
     cy.wait("@createCategory")
       .its("response")
       .should((response) => {

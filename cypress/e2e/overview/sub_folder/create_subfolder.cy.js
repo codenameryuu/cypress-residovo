@@ -12,14 +12,14 @@ describe("Create Subfolder Spec", () => {
     cy.get("button:has(svg.lucide-plus)").should("be.visible").click();
     cy.wait(1000);
 
-    // * Intercept the list category API
+    // * Intercept get list category API
     cy.intercept("GET", "**/api/v1/dashboard/list-category").as("getListCategory");
 
     // * Click on the subfolder button
     cy.get('button[title="Subfolder"]').should("be.visible").click();
     cy.wait(1000);
 
-    // * Wait for the list category API to be called
+    // * Wait for get list category API to be called
     cy.wait("@getListCategory")
       .its("response")
       .should((response) => {
@@ -46,13 +46,13 @@ describe("Create Subfolder Spec", () => {
     // * Type the name
     cy.get("input[name='name']").should("be.visible").type(name).should("have.value", name);
 
-    // * Intercept the create category API
+    // * Intercept create category API
     cy.intercept("POST", "**/api/v1/dashboard/category").as("createCategory");
 
     // * Click on the Done button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
-    // * Wait for the create category API to be called
+    // * Wait for create category API to be called
     cy.wait("@createCategory")
       .its("response")
       .should((response) => {
