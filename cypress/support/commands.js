@@ -5,13 +5,13 @@ Cypress.Commands.add("login", (email, password) => {
 
   cy.visit(baseUrl + "/login");
 
-  cy.wait(1000);
+  cy.wait(500);
 
   cy.contains("div", /^Accept$/)
     .should("be.visible")
     .click();
 
-  cy.wait(1000);
+  cy.wait(500);
 
   cy.get("input[type='email']").should("be.visible").type(loginEmail).should("have.value", loginEmail);
 
@@ -19,7 +19,7 @@ Cypress.Commands.add("login", (email, password) => {
 
   cy.get("button[type='submit']").contains("Sign In").should("be.enabled").click();
 
-  cy.wait(5000);
+  cy.wait(3000);
 
   cy.url().should("include", "/dashboard/category");
 });
