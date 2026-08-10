@@ -2,8 +2,8 @@ import { faker } from "@faker-js/faker";
 
 const baseUrl = Cypress.expose("BASE_URL");
 
-describe("Login spec", () => {
-  it("should log in successfully with valid credentials", () => {
+describe("Login Spec", () => {
+  it("Should log in successfully with valid credentials", () => {
     const loginUrl = baseUrl + "/login";
 
     const email = Cypress.expose("ACCOUNT_EMAIL");
@@ -29,7 +29,7 @@ describe("Login spec", () => {
     cy.url().should("include", "/dashboard/category");
   });
 
-  it("should log in failed with invalid credentials", () => {
+  it("Should log in failed with invalid credentials", () => {
     const loginUrl = baseUrl + "/login";
     const email = faker.internet.email();
     const password = faker.internet.password();

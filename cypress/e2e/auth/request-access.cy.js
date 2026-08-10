@@ -2,8 +2,8 @@ import { faker } from "@faker-js/faker";
 
 const baseUrl = Cypress.expose("BASE_URL");
 
-describe("Login spec", () => {
-  it("should log in successfully with valid data", () => {
+describe("Request Access Spec", () => {
+  it("Should log in successfully with valid data", () => {
     const requestAccessUrl = baseUrl + "/register";
 
     const firstName = faker.person.firstName();
@@ -41,7 +41,7 @@ describe("Login spec", () => {
     cy.wait("@requestAccessRequest").its("response.statusCode").should("eq", 200);
   });
 
-  it("should log in failed with invalid credentials", () => {
+  it("Should log in failed with invalid credentials", () => {
     const requestAccessUrl = baseUrl + "/register";
 
     const firstName = faker.person.firstName();
