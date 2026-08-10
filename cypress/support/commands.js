@@ -1,19 +1,25 @@
-Cypress.Commands.add("login", () => {
-  const apiUrl = Cypress.expose("API_URL");
-  const url = apiUrl + "/auth/login";
+Cypress.Commands.add("login", (email, password) => {
+  const baseUrl = Cypress.expose("BASE_URL");
+  const loginEmail = email || Cypress.expose("ACCOUNT_EMAIL");
+  const loginPassword = password || Cypress.expose("ACCOUNT_PASSWORD");
 
-  const email = "fikri@kemang.sg";
-  const password = "fikrisabriansyah123@";
+  cy.visit(baseUrl + "/login");
 
-  cy.request({
-    method: "POST",
-    url: url,
-    body: {
-      email: email,
-      password: password,
-      language: "en",
-    },
-  }).then((res) => {
-    window.localStorage.setItem("access_token", res.body.data.access_token);
-  });
+  cy.wait(1000);
+
+  cy.contains("div", /^Accept$/)
+    .should("be.visible")
+    .click();
+
+  cy.wait(1000);
+
+  cy.get("input[type='email']").should("be.visible").type(loginEmail).should("have.value", loginEmail);
+
+  cy.get("input[type='password']").should("be.visible").type(loginPassword).should("have.value", loginPassword);
+
+  cy.get("button[type='submit']").contains("Sign In").should("be.enabled").click();
+
+  cy.wait(5000);
+
+  cy.url().should("include", "/dashboard/category");
 });

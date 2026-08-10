@@ -76,9 +76,11 @@ describe("Request Access Spec", () => {
     cy.get("button[type='submit']").contains("Register").should("be.enabled");
     cy.get("button[type='submit']").contains("Register").click();
 
-    cy.wait("@requestAccessRequest").its("response.body").should("deep.include", {
-      status: false,
-      code: "email_already_taken",
-    });
+    cy.wait("@requestAccessRequest")
+      .its("response")
+      .should((response) => {
+        expect(response.statusCode).to.eq(200);
+        expect(response.body).to.deep.include({ status: false, code: "email_already_taken" });
+      });
   });
 });
