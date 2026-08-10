@@ -6,10 +6,10 @@ describe("Create Building Spec", () => {
   });
 
   it("Should create building successfully with valid data", () => {
-    const name = faker.company.name() + " " + faker.string.numeric(4);
-    const street = faker.location.streetAddress();
-    const houseNumber = faker.string.numeric(2);
-    const postCode = faker.string.numeric(5);
+    let name = faker.company.name() + " " + faker.string.numeric(4);
+    let street = faker.location.streetAddress();
+    let houseNumber = faker.string.numeric(2);
+    let postCode = faker.string.numeric(5);
 
     cy.get("button:has(svg.lucide-plus)").should("be.visible").click();
 
@@ -25,7 +25,7 @@ describe("Create Building Spec", () => {
 
     cy.wait(500);
 
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
     cy.get("input[name='street']").should("be.visible").type(street).should("have.value", street);
 
@@ -49,7 +49,7 @@ describe("Create Building Spec", () => {
 
     cy.intercept("POST", "**/api/v1/dashboard/building").as("createBuilding");
 
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
     cy.wait("@createBuilding")
       .its("response")

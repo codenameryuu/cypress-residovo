@@ -10,6 +10,8 @@ module.exports = defineConfig({
     saveAllAttempts: false,
   },
   e2e: {
+    viewportWidth: 1600,
+    viewportHeight: 900,
     expose: {
       BASE_URL: "https://stg.residovo.com",
       ACCOUNT_EMAIL: "mycondosite@gmail.com",

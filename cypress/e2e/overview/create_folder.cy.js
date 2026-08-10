@@ -1,15 +1,12 @@
 import { faker } from "@faker-js/faker";
 
-describe("Create Building Spec", () => {
+describe("Create Folder Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should create building successfully with valid data", () => {
-    const name = faker.company.name() + " " + faker.string.numeric(4);
-    const street = faker.location.streetAddress();
-    const houseNumber = faker.string.numeric(2);
-    const postCode = faker.string.numeric(5);
+  it("Should create folder successfully with valid data", () => {
+    let name = faker.company.name() + " " + faker.string.numeric(4);
 
     cy.get("button:has(svg.lucide-plus)").should("be.visible").click();
 
@@ -27,7 +24,7 @@ describe("Create Building Spec", () => {
 
     cy.intercept("POST", "**/api/v1/dashboard/category").as("createCategory");
 
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
     cy.wait("@createCategory")
       .its("response")

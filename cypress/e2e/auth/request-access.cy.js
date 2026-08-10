@@ -4,14 +4,14 @@ const baseUrl = Cypress.expose("BASE_URL");
 
 describe("Request Access Spec", () => {
   it("Should log in successfully with valid data", () => {
-    const requestAccessUrl = baseUrl + "/register";
+    let requestAccessUrl = baseUrl + "/register";
 
-    const firstName = faker.person.firstName();
-    const lastName = faker.person.lastName();
-    const fullName = `${firstName} ${lastName}`;
-    const companyName = faker.company.name();
-    const email = `${firstName}.${lastName}@example.com`;
-    const phoneNumber = faker.string.numeric(8);
+    let firstName = faker.person.firstName();
+    let lastName = faker.person.lastName();
+    let fullName = `${firstName} ${lastName}`;
+    let companyName = faker.company.name();
+    let email = `${firstName}.${lastName}@example.com`;
+    let phoneNumber = faker.string.numeric(8);
 
     cy.visit(requestAccessUrl);
 
@@ -38,14 +38,14 @@ describe("Request Access Spec", () => {
   });
 
   it("Should log in failed with invalid credentials", () => {
-    const requestAccessUrl = baseUrl + "/register";
+    let requestAccessUrl = baseUrl + "/register";
 
-    const firstName = faker.person.firstName();
-    const lastName = faker.person.lastName();
-    const fullName = `${firstName} ${lastName}`;
-    const companyName = faker.company.name();
-    const email = Cypress.expose("ACCOUNT_EMAIL");
-    const phoneNumber = faker.string.numeric(8);
+    let firstName = faker.person.firstName();
+    let lastName = faker.person.lastName();
+    let fullName = `${firstName} ${lastName}`;
+    let companyName = faker.company.name();
+    let email = Cypress.expose("ACCOUNT_EMAIL");
+    let phoneNumber = faker.string.numeric(8);
 
     cy.visit(requestAccessUrl);
 

@@ -8,9 +8,10 @@ describe("Login Spec", () => {
   });
 
   it("Should log in failed with invalid credentials", () => {
-    const loginUrl = baseUrl + "/login";
-    const email = faker.internet.email();
-    const password = faker.internet.password();
+    let loginUrl = baseUrl + "/login";
+
+    let email = faker.internet.email();
+    let password = faker.internet.password();
 
     cy.intercept("POST", "**/api/auth/callback/credentials").as("loginRequest");
 
