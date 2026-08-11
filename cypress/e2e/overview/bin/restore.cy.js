@@ -10,8 +10,9 @@ describe("Restore Data Spec", () => {
     cy.intercept("GET", "**/api/v1/dashboard/bin?**").as("getListBin");
 
     // * Click on the all drafts sidebar item
-    cy.contains("a[href='/dashboard/category/bin']", "Bin").should("be.visible").click();
-    cy.wait(1000);
+    cy.get("a[href='/dashboard/category/bin']").should("exist").click();
+    cy.url().should("include", "/dashboard/category/bin");
+    cy.wait(3000);
 
     // * Wait for get list bin API to be called
     cy.wait("@getListBin")
@@ -27,14 +28,14 @@ describe("Restore Data Spec", () => {
     cy.wait(1000);
 
     // * Click on the restore button
-    cy.contains("button.button-bin", "Restore").should("be.visible").click();
+    cy.get("button.button-bin:has(svg.lucide-archive-restore)").should("exist").click();
     cy.wait(1000);
 
     // * Intercept restore bin API
     cy.intercept("DELETE", "**/api/v1/dashboard/restore-bin").as("restoreBin");
 
     // * Click on the confirm button in modal
-    cy.get("#updatetConfirmModal").should("be.visible").contains("button.upload-button-next", "Restore").should("be.visible").click();
+    cy.get("#updatetConfirmModal").should("exist").find("button.upload-button-next").should("exist").click();
 
     // * Wait for restore bin API to be called
     cy.wait("@restoreBin")

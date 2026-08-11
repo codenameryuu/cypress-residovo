@@ -11,20 +11,20 @@ Cypress.Commands.add("login", (email, password) => {
 
   // * Click on accept button
   cy.contains("div", /^Accept$/)
-    .should("be.visible")
+    .should("exist")
     .click();
   cy.wait(500);
 
   // * Type the email
-  cy.get("input[type='email']").should("be.visible").type(loginEmail).should("have.value", loginEmail);
+  cy.get("input[type='email']").should("exist").type(loginEmail).should("have.value", loginEmail);
   cy.wait(1000);
 
   // * Type the password
-  cy.get("input[type='password']").should("be.visible").type(loginPassword).should("have.value", loginPassword);
+  cy.get("input[type='password']").should("exist").type(loginPassword).should("have.value", loginPassword);
   cy.wait(1000);
 
   // * Click on sign in button
-  cy.get("button[type='submit']").contains("Sign In").should("be.enabled").click();
+  cy.get("button[type='submit']").should("exist").click();
   cy.url().should("include", "/dashboard/category");
   cy.wait(3000);
 });

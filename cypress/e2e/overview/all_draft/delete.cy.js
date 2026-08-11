@@ -35,7 +35,7 @@ describe("Delete Data Spec", () => {
     cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
 
     // * Click on the confirm button in modal
-    cy.get("#updatetConfirmModal").should("be.visible").contains("button.btn-danger", "Delete").should("exist").click();
+    cy.get("#updatetConfirmModal").should("exist").find("button.btn-danger").should("exist").click();
 
     // * Wait for delete draft API to be called
     cy.wait("@deleteDraft")

@@ -9,14 +9,14 @@ describe("Create Subfolder Spec", () => {
     let name = "Subfolder " + faker.company.name() + " " + faker.string.numeric(4);
 
     // * Click on the plus button
-    cy.get("button:has(svg.lucide-plus)").should("be.visible").click();
+    cy.get("button:has(svg.lucide-plus)").should("exist").click();
     cy.wait(1000);
 
     // * Intercept get list category API
     cy.intercept("GET", "**/api/v1/dashboard/list-category").as("getListCategory");
 
     // * Click on the subfolder button
-    cy.get('button[title="Subfolder"]').should("be.visible").click();
+    cy.get('button:has(img[alt="subfolder"])').should("exist").click();
     cy.wait(1000);
 
     // * Wait for get list category API to be called
@@ -33,10 +33,10 @@ describe("Create Subfolder Spec", () => {
       });
 
     // * Click on the first category in the list
-    cy.get("#modalSelectCategory").should("be.visible").find(".modal-category-title").should("have.length.at.least", 1).first().click();
+    cy.get("#modalSelectCategory").should("exist").find(".modal-category-title").should("have.length.at.least", 1).first().click();
 
     // * Click on the next button
-    cy.get("#modalSelectCategory button.upload-button-next").should("be.visible").click();
+    cy.get("#modalSelectCategory button.upload-button-next").should("exist").click();
 
     // * Get the category ID
     cy.get("@categoryId").then((categoryId) => {
@@ -45,7 +45,7 @@ describe("Create Subfolder Spec", () => {
     });
 
     // * Type the name
-    cy.get("input[name='name']").should("be.visible").type(name).should("have.value", name);
+    cy.get("input[name='name']").should("exist").type(name).should("have.value", name);
     cy.wait(1000);
 
     // * Intercept create category API

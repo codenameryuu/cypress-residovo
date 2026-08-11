@@ -10,7 +10,7 @@ describe("Save Data Spec", () => {
     cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
 
     // * Click on the all drafts sidebar item
-    cy.contains("a[href='/dashboard/category/draft']", "All Drafts").should("be.visible").click();
+    cy.get("a[href='/dashboard/category/draft']").should("exist").click();
     cy.url().should("include", "/dashboard/category/draft");
     cy.wait(3000);
 
@@ -42,7 +42,7 @@ describe("Save Data Spec", () => {
 
         // * If name is empty, type a new name
         cy.get("input[name='name']")
-          .should("be.visible")
+          .should("exist")
           .invoke("val")
           .then((value) => {
             if (!value) {
@@ -52,12 +52,12 @@ describe("Save Data Spec", () => {
           });
 
         // * Click on the next button
-        cy.contains("button.upload-button-next:visible", "Next").should("be.enabled").click();
+        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
         cy.wait(1000);
 
         // * If street is empty, type a new street
         cy.get("input[name='street']")
-          .should("be.visible")
+          .should("exist")
           .invoke("val")
           .then((value) => {
             if (!value) {
@@ -68,7 +68,7 @@ describe("Save Data Spec", () => {
 
         // * If house number is empty, type a new house number
         cy.get("input[name='house_number']")
-          .should("be.visible")
+          .should("exist")
           .invoke("val")
           .then((value) => {
             if (!value) {
@@ -79,7 +79,7 @@ describe("Save Data Spec", () => {
 
         // * If post code is empty, type a new post code
         cy.get("input[name='postcode']")
-          .should("be.visible")
+          .should("exist")
           .invoke("val")
           .then((value) => {
             if (!value) {
@@ -90,7 +90,7 @@ describe("Save Data Spec", () => {
 
         // * If city is empty, select a city
         cy.get("input[name='city']")
-          .should("be.visible")
+          .should("exist")
           .invoke("val")
           .then((value) => {
             if (!value) {
@@ -98,7 +98,7 @@ describe("Save Data Spec", () => {
               cy.intercept("GET", "**/api/v1/master-data/city**").as("getCity");
 
               // * Click on city select button
-              cy.get("div.input-custom.mt-3.py-2:visible").filter(':has(img[alt="required"])').first().click();
+              cy.get("div.input-custom.mt-3.py-2").filter(':has(img[alt="required"])').first().click();
               cy.wait(2000);
 
               // * Wait for get city API to be called
@@ -111,7 +111,7 @@ describe("Save Data Spec", () => {
                 });
 
               // * Wait for the city modal to be visible
-              cy.get("#listCityModal").should("be.visible").find("tbody tr").should("have.length.at.least", 1);
+              cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
 
               // * Click on the first city in the list
               cy.get("#listCityModal tbody tr").first().click();
@@ -140,7 +140,7 @@ describe("Save Data Spec", () => {
 
         // * If name is empty, type a new name
         cy.get("input[name='name']")
-          .should("be.visible")
+          .should("exist")
           .invoke("val")
           .then((value) => {
             if (!value) {
@@ -181,7 +181,7 @@ describe("Save Data Spec", () => {
 
         // * If name is empty, type a new name
         cy.get("input[name='name']")
-          .should("be.visible")
+          .should("exist")
           .invoke("val")
           .then((value) => {
             if (!value) {

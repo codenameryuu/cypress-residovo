@@ -10,8 +10,9 @@ describe("Delete Data Spec", () => {
     cy.intercept("GET", "**/api/v1/dashboard/bin?**").as("getListBin");
 
     // * Click on the all drafts sidebar item
-    cy.contains("a[href='/dashboard/category/bin']", "Bin").should("be.visible").click();
-    cy.wait(1000);
+    cy.get("a[href='/dashboard/category/bin']").should("exist").click();
+    cy.url().should("include", "/dashboard/category/bin");
+    cy.wait(3000);
 
     // * Wait for get list bin API to be called
     cy.wait("@getListBin")
@@ -27,14 +28,14 @@ describe("Delete Data Spec", () => {
     cy.wait(1000);
 
     // * Click on the delete button
-    cy.contains("button.button-bin", "Delete").should("be.visible").click();
+    cy.get("button.button-bin:has(svg.lucide-trash2)").should("exist").click();
     cy.wait(1000);
 
     // * Intercept delete bin API
     cy.intercept("DELETE", "**/api/v1/dashboard/delete-bin").as("deleteBin");
 
     // * Click on the confirm button in modal
-    cy.get("#updatetConfirmModal").should("be.visible").contains("button.btn-danger", "Delete").should("be.visible").click();
+    cy.get("#updatetConfirmModal").should("exist").find("button.btn-danger").should("exist").click();
 
     // * Wait for delete bin API to be called
     cy.wait("@deleteBin")

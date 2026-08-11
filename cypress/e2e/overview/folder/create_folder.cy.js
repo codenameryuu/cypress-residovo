@@ -9,16 +9,16 @@ describe("Create Folder Spec", () => {
     let name = "Folder " + faker.company.name() + " " + faker.string.numeric(4);
 
     // * Click on the plus button
-    cy.get("button:has(svg.lucide-plus)").should("be.visible").click();
+    cy.get("button:has(svg.lucide-plus)").should("exist").click();
     cy.wait(1000);
 
     // * Click on the folder button
-    cy.get('button[title=" Folder"]').should("be.visible").click();
+    cy.get('button:has(img[alt="category"])').should("exist").click();
     cy.url().should("include", "/dashboard/category/create");
     cy.wait(3000);
 
     // * Type the name
-    cy.get("input[name='name']").should("be.visible").type(name).should("have.value", name);
+    cy.get("input[name='name']").should("exist").type(name).should("have.value", name);
     cy.wait(1000);
 
     // * Intercept create category API

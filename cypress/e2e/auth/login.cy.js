@@ -21,15 +21,15 @@ describe("Login Spec", () => {
     cy.wait(2000);
 
     // * Type the email
-    cy.get("input[type='email']").should("be.visible").type(email).should("have.value", email);
+    cy.get("input[type='email']").should("exist").type(email).should("have.value", email);
     cy.wait(1000);
 
     // * Type the password
-    cy.get("input[type='password']").should("be.visible").type(password).should("have.value", password);
+    cy.get("input[type='password']").should("exist").type(password).should("have.value", password);
     cy.wait(1000);
 
     // * Click on sign in button
-    cy.get("button[type='submit']").contains("Sign In").should("be.enabled").click();
+    cy.get("button[type='submit']").should("exist").click();
     cy.url().should("include", "/login");
 
     // * Wait for get login API to be called

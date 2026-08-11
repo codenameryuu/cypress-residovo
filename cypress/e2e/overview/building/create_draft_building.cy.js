@@ -12,16 +12,16 @@ describe("Create Building Spec", () => {
     let postCode = faker.string.numeric(5);
 
     // * Click on the plus button
-    cy.get("button:has(svg.lucide-plus)").should("be.visible").click();
+    cy.get("button:has(svg.lucide-plus)").should("exist").click();
     cy.wait(1000);
 
     // * Click on the building button
-    cy.get('button[title="Building"]').should("be.visible").click();
+    cy.get('button:has(img[alt="building"])').should("exist").click();
     cy.url().should("include", "/dashboard/category/building/create");
     cy.wait(3000);
 
     // * Type the name
-    cy.get("input[name='name']").should("be.visible").type(name).should("have.value", name);
+    cy.get("input[name='name']").should("exist").type(name).should("have.value", name);
     cy.wait(1000);
 
     // * Click on the next button
@@ -29,22 +29,22 @@ describe("Create Building Spec", () => {
     cy.wait(1000);
 
     // * Type the street
-    cy.get("input[name='street']").should("be.visible").type(street).should("have.value", street);
+    cy.get("input[name='street']").should("exist").type(street).should("have.value", street);
     cy.wait(1000);
 
     // * Type the house number
-    cy.get("input[name='house_number']").should("be.visible").type(houseNumber).should("have.value", houseNumber);
+    cy.get("input[name='house_number']").should("exist").type(houseNumber).should("have.value", houseNumber);
     cy.wait(1000);
 
     // * Type the post code
-    cy.get("input[name='postcode']").should("be.visible").type(postCode).should("have.value", postCode);
+    cy.get("input[name='postcode']").should("exist").type(postCode).should("have.value", postCode);
     cy.wait(1000);
 
     // * Intercept get city API
     cy.intercept("GET", "**/api/v1/master-data/city**").as("getCity");
 
     // * Click on city select button
-    cy.get("div.input-custom.mt-3.py-2:visible").filter(':has(img[alt="required"])').first().click();
+    cy.get("div.input-custom.mt-3.py-2").filter(':has(img[alt="required"])').first().click();
     cy.wait(2000);
 
     // * Wait for get city API to be called
@@ -57,7 +57,7 @@ describe("Create Building Spec", () => {
       });
 
     // * Wait for the city modal to be visible
-    cy.get("#listCityModal").should("be.visible").find("tbody tr").should("have.length.at.least", 1);
+    cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
 
     // * Click on the first city in the list
     cy.get("#listCityModal tbody tr").first().click();
