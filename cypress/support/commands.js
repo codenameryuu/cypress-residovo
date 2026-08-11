@@ -26,5 +26,5 @@ Cypress.Commands.add("login", (email, password) => {
   // * Click on sign in button
   cy.get("button[type='submit']").contains("Sign In").should("be.enabled").click();
   cy.url().should("include", "/dashboard/category");
-  cy.wait(5000);
+  cy.wait(3000);
 });

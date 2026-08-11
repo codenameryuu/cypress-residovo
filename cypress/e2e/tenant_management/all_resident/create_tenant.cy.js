@@ -108,10 +108,11 @@ describe("Create Tenant Spec", () => {
       editor.fire("input");
       editor.save();
     });
+
     cy.wait(500);
 
     // * Click on the next button once enabled
-    cy.get("button.upload-button-next:visible", { timeout: 15000 }).should("be.enabled").and("have.length.at.least", 1).first().click();
+    cy.get("button.upload-button-next:visible").should("be.enabled").and("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
     // * Type the street

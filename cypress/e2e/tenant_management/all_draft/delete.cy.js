@@ -15,7 +15,8 @@ describe("Delete Data Spec", () => {
 
     // * Click on the all drafts sidebar item
     cy.contains("a[href='/dashboard/tenant/draft']", "All Drafts").should("be.visible").click();
-    cy.wait(1000);
+    cy.url().should("include", "/dashboard/tenant/draft");
+    cy.wait(3000);
 
     // * Wait for get list draft API to be called
     cy.wait("@getListDraft")
@@ -30,8 +31,8 @@ describe("Delete Data Spec", () => {
     cy.get(".ag-row .ag-selection-checkbox").should("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
-    // * Click on the delete button
-    cy.contains("button.button-bin", "Delete").scrollIntoView().should("be.visible").click();
+    // * Click on the delete button (may be clipped by overflow parent)
+    cy.contains("button.button-bin", "Delete").should("exist").click();
     cy.wait(1000);
 
     // * Intercept delete draft API

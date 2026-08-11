@@ -6,6 +6,17 @@ describe("Save Data Spec", () => {
   });
 
   it("Should save data successfully with valid data", () => {
+    let firstName = faker.person.firstName();
+    let lastName = faker.person.lastName();
+    let email = firstName.toLowerCase() + "." + lastName.toLowerCase() + "@example.com";
+    let phoneNumber = faker.string.numeric(8);
+    let note = faker.lorem.sentence();
+    let street = faker.location.streetAddress();
+    let houseNumber = faker.string.numeric(2);
+    let postCode = faker.string.numeric(5);
+    let floor = faker.string.numeric(1);
+    let unit = faker.string.numeric(1);
+
     // * Intercept get list draft API
     cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
 
@@ -15,7 +26,8 @@ describe("Save Data Spec", () => {
 
     // * Click on the all drafts sidebar item
     cy.contains("a[href='/dashboard/tenant/draft']", "All Drafts").should("be.visible").click();
-    cy.wait(1000);
+    cy.url().should("include", "/dashboard/tenant/draft");
+    cy.wait(3000);
 
     // * Wait for get list draft API to be called
     cy.wait("@getListDraft")
@@ -33,82 +45,172 @@ describe("Save Data Spec", () => {
 
     // * Click first data on the table
     cy.get(".ag-center-cols-container .ag-row").should("have.length.at.least", 1).first().click();
-    cy.wait(1000);
+    cy.wait(5000);
 
-    // * Get the sub type
-    cy.get("@subType").then((subType) => {
-      if (subType === "building") {
-        // * Intercept create building API
-        cy.intercept("POST", "**/api/v1/dashboard/building").as("createBuilding");
+    // * If first name is empty, type a new first name
+    cy.get("input[name='first_name']")
+      .should("be.visible")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='first_name']").type(firstName).should("have.value", firstName);
+          cy.wait(1000);
+        }
+      });
 
-        // * Click on the Done button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    // * If last name is empty, type a new last name
+    cy.get("input[name='last_name']")
+      .should("be.visible")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='last_name']").type(lastName).should("have.value", lastName);
+          cy.wait(1000);
+        }
+      });
 
-        // * Wait for create building API to be called
-        cy.wait("@createBuilding")
-          .its("response")
-          .should((response) => {
-            expect(response.statusCode).to.eq(200);
-            expect(response.body).to.deep.include({ status: true });
-            expect(response.body.data).to.exist.and.not.be.empty;
-          });
-      }
+    // * If email is empty, type a new email
+    cy.get("input[name='email']")
+      .should("be.visible")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='email']").type(email).should("have.value", email);
+          cy.wait(1000);
+        }
+      });
 
-      if (subType === "category") {
-        // * Intercept create category API
-        cy.intercept("POST", "**/api/v1/dashboard/category").as("createCategory");
+    // * If phone number is empty, type a new phone number
+    cy.get("input[name='phone']")
+      .should("be.visible")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='phone']").type(phoneNumber).should("have.value", phoneNumber);
+          cy.wait(1000);
+        }
+      });
 
-        // * Intercept delete draft API
-        cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
+    // * Wait for TinyMCE to be fully loaded
+    cy.get("iframe.tox-edit-area__iframe", { timeout: 15000 }).should("exist");
+    cy.window({ timeout: 15000 }).should((win) => {
+      expect(win.tinymce, "tinymce global").to.exist;
+      const editor = win.tinymce.activeEditor || win.tinymce.editors?.[0];
+      expect(editor, "tinymce editor").to.exist;
+      expect(editor.initialized, "tinymce initialized").to.eq(true);
+      expect(editor.getBody(), "tinymce body").to.exist;
+    });
 
-        // * Click on the Done button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    // * If note is empty, type a new note
+    cy.window().then((win) => {
+      const editor = win.tinymce.activeEditor || win.tinymce.editors[0];
+      const content = (editor.getContent({ format: "text" }) || "").trim();
 
-        // * Wait for create category API to be called
-        cy.wait("@createCategory")
-          .its("response")
-          .should((response) => {
-            expect(response.statusCode).to.eq(200);
-            expect(response.body).to.deep.include({ status: true });
-            expect(response.body.data).to.exist.and.not.be.empty;
-          });
+      if (!content) {
+        cy.get("iframe.tox-edit-area__iframe").then(($iframe) => {
+          const $body = $iframe.contents().find("body#tinymce");
+          cy.wrap($body).click({ force: true });
+          cy.wait(300);
+          cy.wrap($body).type(`{selectall}{backspace}${note}`, { delay: 20, force: true });
+          cy.wrap($body).should("contain.text", note);
+        });
 
-        // * Wait for delete draft API to be called
-        cy.wait("@deleteDraft")
-          .its("response")
-          .should((response) => {
-            expect(response.statusCode).to.eq(200);
-            expect(response.body).to.deep.include({ status: true });
-          });
-      }
+        cy.window().then((w) => {
+          const ed = w.tinymce.activeEditor || w.tinymce.editors[0];
+          ed.fire("change");
+          ed.fire("input");
+          ed.save();
+        });
 
-      if (subType === "subcategory") {
-        // * Intercept create category API
-        cy.intercept("POST", "**/api/v1/dashboard/category").as("createCategory");
-
-        // * Intercept delete draft API
-        cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
-
-        // * Click on the Done button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
-
-        // * Wait for create category API to be called
-        cy.wait("@createCategory")
-          .its("response")
-          .should((response) => {
-            expect(response.statusCode).to.eq(200);
-            expect(response.body).to.deep.include({ status: true });
-            expect(response.body.data).to.exist.and.not.be.empty;
-          });
-
-        // * Wait for delete draft API to be called
-        cy.wait("@deleteDraft")
-          .its("response")
-          .should((response) => {
-            expect(response.statusCode).to.eq(200);
-            expect(response.body).to.deep.include({ status: true });
-          });
+        cy.wait(500);
       }
     });
+
+    // * Click on the next button once enabled
+    cy.get("button.upload-button-next:visible").should("be.enabled").and("have.length.at.least", 1).first().click();
+    cy.wait(1000);
+
+    // * If street is empty, type a new street
+    cy.get("input[name='street']")
+      .should("be.visible")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='street']").type(street).should("have.value", street);
+          cy.wait(1000);
+        }
+      });
+
+    // * If house number is empty, type a new house number
+    cy.get("input[name='house_number']")
+      .should("be.visible")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='house_number']").type(houseNumber).should("have.value", houseNumber);
+          cy.wait(1000);
+        }
+      });
+
+    // * If post code is empty, type a new post code
+    cy.get("input[name='postcode']")
+      .should("be.visible")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='postcode']").type(postCode).should("have.value", postCode);
+          cy.wait(1000);
+        }
+      });
+
+    // * If city is empty, select a city
+    cy.get("input[name='city']")
+      .should("be.visible")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          // * Intercept get city API
+          cy.intercept("GET", "**/api/v1/master-data/city**").as("getCity");
+
+          // * Click on city select button
+          cy.get("div.input-custom.mt-3.py-2:visible").filter(':has(img[alt="required"])').first().click();
+          cy.wait(2000);
+
+          // * Wait for get city API to be called
+          cy.wait("@getCity")
+            .its("response")
+            .should((response) => {
+              expect(response.statusCode).to.eq(200);
+              expect(response.body).to.deep.include({ status: true });
+              expect(response.body.data).to.exist.and.not.be.empty;
+            });
+
+          // * Wait for the city modal to be visible
+          cy.get("#listCityModal").should("be.visible").find("tbody tr").should("have.length.at.least", 1);
+
+          // * Click on the first city in the list
+          cy.get("#listCityModal tbody tr").first().click();
+          cy.wait(1000);
+        }
+      });
+
+    // * Click on the next button
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    cy.wait(1000);
+
+    // * Intercept create tenant API
+    cy.intercept("POST", "**/api/v1/dashboard/tenant").as("createTenant");
+
+    // * Click on the Done button
+    cy.get("#tenantInvitationModal button.upload-button-next").should("be.visible").click();
+
+    // * Wait for create tenant API to be called
+    cy.wait("@createTenant")
+      .its("response")
+      .should((response) => {
+        expect(response.statusCode).to.eq(200);
+        expect(response.body).to.deep.include({ status: true });
+        expect(response.body.data).to.exist.and.not.be.empty;
+      });
   });
 });

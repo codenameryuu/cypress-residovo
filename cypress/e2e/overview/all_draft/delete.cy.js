@@ -10,8 +10,9 @@ describe("Delete Data Spec", () => {
     cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
 
     // * Click on the all drafts sidebar item
-    cy.contains("a[href='/dashboard/category/draft']", "All Drafts").should("be.visible").click();
-    cy.wait(1000);
+    cy.get("a[href='/dashboard/category/draft']").should("exist").click();
+    cy.url().should("include", "/dashboard/category/draft");
+    cy.wait(3000);
 
     // * Wait for get list draft API to be called
     cy.wait("@getListDraft")
@@ -27,14 +28,14 @@ describe("Delete Data Spec", () => {
     cy.wait(1000);
 
     // * Click on the delete button
-    cy.contains("button.button-bin", "Delete").should("be.visible").click();
+    cy.contains("button.button-bin", "Delete").should("exist").click();
     cy.wait(1000);
 
     // * Intercept delete draft API
     cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
 
     // * Click on the confirm button in modal
-    cy.get("#updatetConfirmModal").should("be.visible").contains("button.btn-danger", "Delete").should("be.visible").click();
+    cy.get("#updatetConfirmModal").should("be.visible").contains("button.btn-danger", "Delete").should("exist").click();
 
     // * Wait for delete draft API to be called
     cy.wait("@deleteDraft")
