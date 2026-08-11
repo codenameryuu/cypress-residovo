@@ -111,7 +111,7 @@ describe("Create Tenant Spec", () => {
     cy.wait(500);
 
     // * Click on the next button once enabled
-    cy.get("button.upload-button-next:visible", { timeout: 15000 }).should("be.enabled").and("have.length.at.least", 1).first().scrollIntoView().click();
+    cy.get("button.upload-button-next:visible", { timeout: 15000 }).should("be.enabled").and("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
     // * Type the street
@@ -131,7 +131,7 @@ describe("Create Tenant Spec", () => {
 
     // * Click on city select button
     cy.get("div.input-custom.mt-3.py-2:visible").filter(':has(img[alt="required"])').first().click();
-    cy.wait(1000);
+    cy.wait(2000);
 
     // * Wait for get city API to be called
     cy.wait("@getCity")
@@ -160,5 +160,20 @@ describe("Create Tenant Spec", () => {
     // * Click on the next button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
+
+    // * Intercept create tenant API
+    cy.intercept("POST", "**/api/v1/dashboard/tenant").as("createTenant");
+
+    // * Click on the next button
+    cy.get("#tenantInvitationModal button.upload-button-next").should("be.visible").click();
+
+    // * Wait for create tenant API to be called
+    cy.wait("@createTenant")
+      .its("response")
+      .should((response) => {
+        expect(response.statusCode).to.eq(200);
+        expect(response.body).to.deep.include({ status: true });
+        expect(response.body.data).to.exist.and.not.be.empty;
+      });
   });
 });

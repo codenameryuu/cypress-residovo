@@ -25,7 +25,7 @@ describe("Create Folder Spec", () => {
     cy.intercept("POST", "**/api/v1/dashboard/category").as("createCategory");
 
     // * Click on the Done button
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
     // * Wait for create category API to be called
     cy.wait("@createCategory")

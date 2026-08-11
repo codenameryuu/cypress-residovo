@@ -25,7 +25,7 @@ describe("Create Building Spec", () => {
     cy.wait(1000);
 
     // * Click on the next button
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
 
     // * Type the street
@@ -67,7 +67,7 @@ describe("Create Building Spec", () => {
     cy.intercept("POST", "**/api/v1/dashboard/draft").as("createDraft");
 
     // * Click on the save draft button
-    cy.get("button.upload-button-skip:visible:enabled").should("have.length", 1).scrollIntoView().click();
+    cy.get("button.upload-button-skip:visible:enabled").should("have.length", 1).click();
 
     // * Wait for create draft API to be called
     cy.wait("@createDraft")

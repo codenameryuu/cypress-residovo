@@ -27,7 +27,7 @@ describe("Delete Data Spec", () => {
     cy.wait(1000);
 
     // * Click on the delete button
-    cy.contains("button.button-bin", "Delete").scrollIntoView().should("be.visible").click();
+    cy.contains("button.button-bin", "Delete").should("be.visible").click();
     cy.wait(1000);
 
     // * Intercept delete draft API

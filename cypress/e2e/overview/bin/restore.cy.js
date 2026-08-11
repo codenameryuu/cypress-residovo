@@ -27,7 +27,7 @@ describe("Restore Data Spec", () => {
     cy.wait(1000);
 
     // * Click on the restore button
-    cy.contains("button.button-bin", "Restore").scrollIntoView().should("be.visible").click();
+    cy.contains("button.button-bin", "Restore").should("be.visible").click();
     cy.wait(1000);
 
     // * Intercept restore bin API

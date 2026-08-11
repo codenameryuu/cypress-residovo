@@ -52,7 +52,7 @@ describe("Save Data Spec", () => {
           });
 
         // * Click on the next button
-        cy.contains("button.upload-button-next:visible", "Next").should("be.enabled").scrollIntoView().click();
+        cy.contains("button.upload-button-next:visible", "Next").should("be.enabled").click();
         cy.wait(1000);
 
         // * If street is empty, type a new street
@@ -123,7 +123,7 @@ describe("Save Data Spec", () => {
         cy.intercept("POST", "**/api/v1/dashboard/building").as("createBuilding");
 
         // * Click on the Done button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
+        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
         // * Wait for create building API to be called
         cy.wait("@createBuilding")
@@ -156,7 +156,7 @@ describe("Save Data Spec", () => {
         cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
 
         // * Click on the Done button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
+        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
         // * Wait for create category API to be called
         cy.wait("@createCategory")
@@ -197,7 +197,7 @@ describe("Save Data Spec", () => {
         cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
 
         // * Click on the Done button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
+        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
         // * Wait for create category API to be called
         cy.wait("@createCategory")

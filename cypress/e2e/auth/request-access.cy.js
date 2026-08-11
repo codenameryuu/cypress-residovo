@@ -37,7 +37,7 @@ describe("Request Access Spec", () => {
     cy.intercept("POST", "**/api/v1/request-access").as("requestAccessRequest");
 
     // * Click on register button
-    cy.get("button[type='submit']").contains("Register").should("be.enabled").scrollIntoView().click();
+    cy.get("button[type='submit']").contains("Register").should("be.enabled").click();
 
     // * Wait for request access API to be called
     cy.wait("@requestAccessRequest")
@@ -82,7 +82,7 @@ describe("Request Access Spec", () => {
     cy.intercept("POST", "**/api/v1/request-access").as("requestAccessRequest");
 
     // * Click on register button
-    cy.get("button[type='submit']").contains("Register").should("be.enabled").scrollIntoView().click();
+    cy.get("button[type='submit']").contains("Register").should("be.enabled").click();
 
     // * Wait for request access API to be called
     cy.wait("@requestAccessRequest")
