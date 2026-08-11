@@ -13,26 +13,30 @@ describe("Login Spec", () => {
     let email = faker.internet.email();
     let password = faker.internet.password();
 
+    // * Intercept login request
     cy.intercept("POST", "**/api/auth/callback/credentials").as("loginRequest");
 
+    // * Visit login page
     cy.visit(loginUrl);
+    cy.wait(2000);
 
+    // * Type the email
+    cy.get("input[type='email']").should("be.visible").type(email).should("have.value", email);
     cy.wait(1000);
 
-    cy.get("input[type='email']").should("be.visible").type(email).should("have.value", email);
-
+    // * Type the password
     cy.get("input[type='password']").should("be.visible").type(password).should("have.value", password);
+    cy.wait(1000);
 
-    cy.get("button[type='submit']").contains("Sign In").should("be.enabled").click();
+    // * Click on sign in button
+    cy.get("button[type='submit']").contains("Sign In").should("be.enabled").scrollIntoView().click();
+    cy.url().should("include", "/login");
 
+    // * Wait for get login API to be called
     cy.wait("@loginRequest")
       .its("response")
       .should((response) => {
         expect(response.statusCode).to.eq(401);
       });
-
-    cy.wait(1000);
-
-    cy.url().should("include", "/login");
   });
 });

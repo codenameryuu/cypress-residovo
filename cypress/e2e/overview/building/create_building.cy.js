@@ -17,33 +17,35 @@ describe("Create Building Spec", () => {
 
     // * Click on the building button
     cy.get('button[title="Building"]').should("be.visible").click();
-    cy.wait(1000);
-
-    // * Check if the URL includes the building create page
     cy.url().should("include", "/dashboard/category/building/create");
+    cy.wait(3000);
 
     // * Type the name
     cy.get("input[name='name']").should("be.visible").type(name).should("have.value", name);
+    cy.wait(1000);
 
     // * Click on the next button
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
     cy.wait(1000);
 
     // * Type the street
     cy.get("input[name='street']").should("be.visible").type(street).should("have.value", street);
+    cy.wait(1000);
 
     // * Type the house number
     cy.get("input[name='house_number']").should("be.visible").type(houseNumber).should("have.value", houseNumber);
+    cy.wait(1000);
 
     // * Type the post code
     cy.get("input[name='postcode']").should("be.visible").type(postCode).should("have.value", postCode);
+    cy.wait(1000);
 
     // * Intercept get city API
     cy.intercept("GET", "**/api/v1/master-data/city**").as("getCity");
 
     // * Click on city select button
     cy.get("div.input-custom.mt-3.py-2:visible").filter(':has(img[alt="required"])').first().click();
-    cy.wait(1000);
+    cy.wait(2000);
 
     // * Wait for get city API to be called
     cy.wait("@getCity")
@@ -59,13 +61,13 @@ describe("Create Building Spec", () => {
 
     // * Click on the first city in the list
     cy.get("#listCityModal tbody tr").first().click();
-    cy.wait(500);
+    cy.wait(1000);
 
     // * Intercept create building API
     cy.intercept("POST", "**/api/v1/dashboard/building").as("createBuilding");
 
     // * Click on the Done button
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
 
     // * Wait for create building API to be called
     cy.wait("@createBuilding")

@@ -11,7 +11,8 @@ describe("Save Data Spec", () => {
 
     // * Click on the all drafts sidebar item
     cy.contains("a[href='/dashboard/category/draft']", "All Drafts").should("be.visible").click();
-    cy.wait(1000);
+    cy.url().should("include", "/dashboard/category/draft");
+    cy.wait(3000);
 
     // * Wait for get list draft API to be called
     cy.wait("@getListDraft")
@@ -29,7 +30,7 @@ describe("Save Data Spec", () => {
 
     // * Click first data on the table
     cy.get(".ag-center-cols-container .ag-row").should("have.length.at.least", 1).first().click();
-    cy.wait(1000);
+    cy.wait(3000);
 
     // * Get the sub type
     cy.get("@subType").then((subType) => {
@@ -46,11 +47,13 @@ describe("Save Data Spec", () => {
           .then((value) => {
             if (!value) {
               cy.get("input[name='name']").type(name).should("have.value", name);
+              cy.wait(1000);
             }
           });
 
         // * Click on the next button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+        cy.contains("button.upload-button-next:visible", "Next").should("be.enabled").scrollIntoView().click();
+        cy.wait(1000);
 
         // * If street is empty, type a new street
         cy.get("input[name='street']")
@@ -59,6 +62,7 @@ describe("Save Data Spec", () => {
           .then((value) => {
             if (!value) {
               cy.get("input[name='street']").type(street).should("have.value", street);
+              cy.wait(1000);
             }
           });
 
@@ -69,6 +73,7 @@ describe("Save Data Spec", () => {
           .then((value) => {
             if (!value) {
               cy.get("input[name='house_number']").type(houseNumber).should("have.value", houseNumber);
+              cy.wait(1000);
             }
           });
 
@@ -79,6 +84,7 @@ describe("Save Data Spec", () => {
           .then((value) => {
             if (!value) {
               cy.get("input[name='postcode']").type(postCode).should("have.value", postCode);
+              cy.wait(1000);
             }
           });
 
@@ -93,7 +99,7 @@ describe("Save Data Spec", () => {
 
               // * Click on city select button
               cy.get("div.input-custom.mt-3.py-2:visible").filter(':has(img[alt="required"])').first().click();
-              cy.wait(1000);
+              cy.wait(2000);
 
               // * Wait for get city API to be called
               cy.wait("@getCity")
@@ -109,7 +115,7 @@ describe("Save Data Spec", () => {
 
               // * Click on the first city in the list
               cy.get("#listCityModal tbody tr").first().click();
-              cy.wait(500);
+              cy.wait(1000);
             }
           });
 
@@ -117,7 +123,7 @@ describe("Save Data Spec", () => {
         cy.intercept("POST", "**/api/v1/dashboard/building").as("createBuilding");
 
         // * Click on the Done button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
 
         // * Wait for create building API to be called
         cy.wait("@createBuilding")
@@ -139,6 +145,7 @@ describe("Save Data Spec", () => {
           .then((value) => {
             if (!value) {
               cy.get("input[name='name']").type(name).should("have.value", name);
+              cy.wait(1000);
             }
           });
 
@@ -149,7 +156,7 @@ describe("Save Data Spec", () => {
         cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
 
         // * Click on the Done button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
 
         // * Wait for create category API to be called
         cy.wait("@createCategory")
@@ -179,6 +186,7 @@ describe("Save Data Spec", () => {
           .then((value) => {
             if (!value) {
               cy.get("input[name='name']").type(name).should("have.value", name);
+              cy.wait(1000);
             }
           });
 
@@ -189,7 +197,7 @@ describe("Save Data Spec", () => {
         cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
 
         // * Click on the Done button
-        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+        cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
 
         // * Wait for create category API to be called
         cy.wait("@createCategory")

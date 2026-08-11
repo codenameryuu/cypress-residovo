@@ -14,19 +14,18 @@ describe("Create Folder Spec", () => {
 
     // * Click on the folder button
     cy.get('button[title=" Folder"]').should("be.visible").click();
-    cy.wait(1000);
-
-    // * Check if the URL includes the folder create page
     cy.url().should("include", "/dashboard/category/create");
+    cy.wait(3000);
 
     // * Type the name
     cy.get("input[name='name']").should("be.visible").type(name).should("have.value", name);
+    cy.wait(1000);
 
     // * Intercept create category API
     cy.intercept("POST", "**/api/v1/dashboard/category").as("createCategory");
 
     // * Click on the Done button
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
 
     // * Wait for create category API to be called
     cy.wait("@createCategory")

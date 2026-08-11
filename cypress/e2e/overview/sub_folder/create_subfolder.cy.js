@@ -37,22 +37,22 @@ describe("Create Subfolder Spec", () => {
 
     // * Click on the next button
     cy.get("#modalSelectCategory button.upload-button-next").should("be.visible").click();
-    cy.wait(1000);
 
     // * Get the category ID
     cy.get("@categoryId").then((categoryId) => {
-      // * Check if the URL includes the subfolder create page
       cy.url().should("include", `/dashboard/category/${categoryId}/subcategory/create`);
+      cy.wait(3000);
     });
 
     // * Type the name
     cy.get("input[name='name']").should("be.visible").type(name).should("have.value", name);
+    cy.wait(1000);
 
     // * Intercept create category API
     cy.intercept("POST", "**/api/v1/dashboard/category").as("createCategory");
 
     // * Click on the Done button
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).scrollIntoView().click();
 
     // * Wait for create category API to be called
     cy.wait("@createCategory")
