@@ -6,7 +6,7 @@ describe("Create Folder Spec", () => {
   });
 
   it("Should create folder successfully with valid data", () => {
-    let name = faker.company.name() + " " + faker.string.numeric(4);
+    let name = "Folder " + faker.company.name() + " " + faker.string.numeric(4);
 
     // * Click on the plus button
     cy.get("button:has(svg.lucide-plus)").should("be.visible").click();

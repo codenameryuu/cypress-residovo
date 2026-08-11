@@ -6,7 +6,7 @@ describe("Create Building Spec", () => {
   });
 
   it("Should create building successfully with valid data", () => {
-    let name = faker.company.name() + " " + faker.string.numeric(4);
+    let name = "Building " + faker.company.name() + " " + faker.string.numeric(4);
     let street = faker.location.streetAddress();
     let houseNumber = faker.string.numeric(2);
     let postCode = faker.string.numeric(5);
@@ -27,6 +27,7 @@ describe("Create Building Spec", () => {
 
     // * Click on the next button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    cy.wait(1000);
 
     // * Type the street
     cy.get("input[name='street']").should("be.visible").type(street).should("have.value", street);

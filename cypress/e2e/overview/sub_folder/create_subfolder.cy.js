@@ -6,7 +6,7 @@ describe("Create Subfolder Spec", () => {
   });
 
   it("Should create subfolder successfully with valid data", () => {
-    let name = faker.company.name() + " " + faker.string.numeric(4);
+    let name = "Subfolder " + faker.company.name() + " " + faker.string.numeric(4);
 
     // * Click on the plus button
     cy.get("button:has(svg.lucide-plus)").should("be.visible").click();
@@ -27,8 +27,10 @@ describe("Create Subfolder Spec", () => {
         expect(response.body).to.deep.include({ status: true });
         expect(response.body.data[0].id).to.exist;
       })
-      .its("body.data.0.id")
-      .as("categoryId");
+      .its("body.data.0")
+      .then((data) => {
+        cy.wrap(data.id).as("categoryId");
+      });
 
     // * Click on the first category in the list
     cy.get("#modalSelectCategory").should("be.visible").find(".modal-category-title").should("have.length.at.least", 1).first().click();
