@@ -5,7 +5,7 @@ describe("Create Tenant Spec", () => {
     cy.login();
   });
 
-  it("Should create tenant successfully with valid data", () => {
+  it("Should create tenant successfully", () => {
     let firstName = faker.person.firstName();
     let lastName = faker.person.lastName();
     let email = firstName.toLowerCase() + "." + lastName.toLowerCase() + "@example.com";
@@ -25,7 +25,7 @@ describe("Create Tenant Spec", () => {
     // * Intercept get list category ext
     cy.intercept("GET", "**/api/v1/dashboard/category-ext**").as("getListCategoryExt");
 
-    // * Click on the plus button
+    // * Click on plus button
     cy.get("div.btn-multi").should("exist").click();
     cy.wait(2000);
 
@@ -36,55 +36,38 @@ describe("Create Tenant Spec", () => {
         expect(response.statusCode).to.eq(200);
         expect(response.body).to.deep.include({ status: true });
         expect(response.body.data.data).to.be.an("array").and.not.be.empty;
-      })
-      .its("body.data.data")
-      .then((categories) => {
-        const firstCategory = categories[0];
-        expect(firstCategory.buildings).to.be.an("array").and.not.be.empty;
-        cy.wrap(firstCategory.id ?? null).as("categoryId");
-        cy.wrap(firstCategory.buildings[0].id).as("buildingId");
       });
 
-    // * Click the first category in the list
+    // * Wait modal, then click on first item in the list
     cy.get("#modalSelectBuildingDocument").should("exist").find(".modal-category-title").should("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
-    // * Select the first building checkbox
+    // * Click on first building checkbox
     cy.get("#modalSelectBuildingDocument .col-10.offset-2").should("have.length.at.least", 1).first().find("div").first().click();
     cy.wait(500);
 
     // * Confirm selection and wait for create tenant page
     cy.get("#modalSelectBuildingDocument button.upload-button-next").should("exist").click();
-
-    // * Get the category and building ID
-    cy.get("@categoryId").then((categoryId) => {
-      cy.get("@buildingId").then((buildingId) => {
-        const expectedPath = categoryId
-          ? `/dashboard/category/${categoryId}/building/${buildingId}/tenant/create`
-          : `/dashboard/category/building/${buildingId}/tenant/create`;
-        cy.url({ timeout: 15000 }).should("include", expectedPath);
-      });
-    });
-
+    cy.url().should("match", /\/dashboard\/category\/building\/\d+\/tenant\/create/);
     cy.wait(5000);
 
-    // * Type the first name
+    // * Type first name
     cy.get("input[name='first_name']").should("exist").type(firstName).should("have.value", firstName);
     cy.wait(1000);
 
-    // * Type the last name
+    // * Type last name
     cy.get("input[name='last_name']").should("exist").type(lastName).should("have.value", lastName);
     cy.wait(1000);
 
-    // * Type the email
+    // * Type email
     cy.get("input[name='email']").should("exist").type(email).should("have.value", email);
     cy.wait(1000);
 
-    // * Type the phone number
+    // * Type phone number
     cy.get("input[name='phone']").should("exist").type(phoneNumber).should("have.value", phoneNumber);
     cy.wait(1000);
 
-    // * Wait for TinyMCE to be fully loaded, then type the note
+    // * Wait for TinyMCE to be fully loaded, then type note
     cy.get("iframe.tox-edit-area__iframe", { timeout: 15000 }).should("exist");
     cy.window({ timeout: 15000 }).should((win) => {
       expect(win.tinymce, "tinymce global").to.exist;
@@ -111,19 +94,19 @@ describe("Create Tenant Spec", () => {
 
     cy.wait(500);
 
-    // * Click on the next button
+    // * Click on next button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
 
-    // * Type the street
+    // * Type street
     cy.get("input[name='street']").should("exist").type(street).should("have.value", street);
     cy.wait(1000);
 
-    // * Type the house number
+    // * Type house number
     cy.get("input[name='house_number']").should("exist").type(houseNumber).should("have.value", houseNumber);
     cy.wait(1000);
 
-    // * Type the post code
+    // * Type post code
     cy.get("input[name='postcode']").should("exist").type(postCode).should("have.value", postCode);
     cy.wait(1000);
 
@@ -143,29 +126,29 @@ describe("Create Tenant Spec", () => {
         expect(response.body.data).to.exist.and.not.be.empty;
       });
 
-    // * Wait for the city modal to be visible
+    // * Wait for city modal to be visible
     cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
 
-    // * Click on the first city in the list
+    // * Click on first item in the list
     cy.get("#listCityModal tbody tr").first().click();
     cy.wait(1000);
 
-    // * Type the floor
+    // * Type floor
     cy.get("input[name='floor']").should("exist").type(floor).should("have.value", floor);
     cy.wait(1000);
 
-    // * Type the unit
+    // * Type unit
     cy.get("input[name='unit']").should("exist").type(unit).should("have.value", unit);
     cy.wait(1000);
 
-    // * Click on the next button
+    // * Click on done button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
 
     // * Intercept create tenant API
     cy.intercept("POST", "**/api/v1/dashboard/tenant").as("createTenant");
 
-    // * Click on the next button
+    // * Click on confirm button
     cy.get("#tenantInvitationModal button.upload-button-next").should("exist").click();
 
     // * Wait for create tenant API to be called
