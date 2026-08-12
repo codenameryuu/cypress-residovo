@@ -5,7 +5,7 @@ describe("Create Message Spec", () => {
     cy.login();
   });
 
-  it("Should create message successfully with valid data", () => {
+  it("Should create message successfully", () => {
     let topic = "Test Topic " + faker.lorem.sentence();
     let message = "Test Message " + faker.lorem.sentence();
 
@@ -19,10 +19,11 @@ describe("Create Message Spec", () => {
     cy.url().should("include", "/dashboard/message/create");
     cy.wait(3000);
 
+    // * Click on add tenant button
     cy.get("span.add-tenant").should("exist").click();
     cy.wait(2000);
 
-    // * Click checkbox on the first tenant row
+    // * Click checkbox on first item in the list
     cy.get("#listTenantModal").should("be.visible").find("tbody tr").should("have.length.at.least", 1);
     cy.get("#listTenantModal tbody tr").first().find('img[src*="icon-unselected-checkbox"]').should("exist").click();
     cy.wait(1000);
@@ -30,6 +31,15 @@ describe("Create Message Spec", () => {
     // * Click on the next button
     cy.get("#listTenantModal button.upload-button-next").should("exist").click();
     cy.wait(1000);
+
+    // * Make sure the send email checkbox is not checked
+    cy.get("body").then(($body) => {
+      const $checked = $body.find("svg.lucide-check:visible");
+      if ($checked.length) {
+        cy.wrap($checked).first().closest("div").click();
+        cy.wait(1000);
+      }
+    });
 
     // * Click on the done button
     cy.get("#listSelectedTenantModal button.upload-button-next").should("exist").click();

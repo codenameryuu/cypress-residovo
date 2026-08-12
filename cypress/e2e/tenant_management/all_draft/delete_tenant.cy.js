@@ -27,11 +27,11 @@ describe("Delete Tenant From Draft Spec", () => {
         expect(response.body.data.data).to.be.an("array").and.not.be.empty;
       });
 
-    // * Click checkbox on the first row
+    // * Click checkbox on first item in the list
     cy.get(".ag-row .ag-selection-checkbox").should("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
-    // * Click on the delete button (may be clipped by overflow parent)
+    // * Click on the delete button
     cy.get("button.button-bin:has(svg.lucide-trash2)").should("exist").click();
     cy.wait(1000);
 
