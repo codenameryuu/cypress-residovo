@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
 
-describe("Save Data Spec", () => {
+describe("Create Tenant From Draft Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should save data successfully with valid data", () => {
+  it("Should create tenant from draft successfully", () => {
     let firstName = faker.person.firstName();
     let lastName = faker.person.lastName();
     let email = firstName.toLowerCase() + "." + lastName.toLowerCase() + "@example.com";
@@ -37,14 +37,11 @@ describe("Save Data Spec", () => {
         expect(response.body).to.deep.include({ status: true });
         expect(response.body.data.data).to.be.an("array").and.not.be.empty;
         expect(response.body.data.data[0].sub_type).to.exist;
-      })
-      .its("body.data.data.0")
-      .then((data) => {
-        cy.wrap(data.sub_type).as("subType");
       });
 
     // * Click first data on the table
     cy.get(".ag-center-cols-container .ag-row").should("have.length.at.least", 1).first().click();
+    cy.url().should("match", /\/dashboard\/category\/(?:\d+\/)?building\/\d+\/tenant\/create/);
     cy.wait(5000);
 
     // * If first name is empty, type a new first name
@@ -197,6 +194,15 @@ describe("Save Data Spec", () => {
     // * Click on the next button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
+
+    // * Make sure the send email checkbox is not checked
+    cy.get("#tenantInvitationModal").should("exist");
+    cy.get('#tenantInvitationModal img[src*="icon-checked"]').then(($checked) => {
+      if ($checked.length) {
+        cy.wrap($checked).first().click();
+        cy.wait(1000);
+      }
+    });
 
     // * Intercept create tenant API
     cy.intercept("POST", "**/api/v1/dashboard/tenant").as("createTenant");

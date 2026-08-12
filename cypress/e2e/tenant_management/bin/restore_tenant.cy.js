@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
 
-describe("Restore Data Spec", () => {
+describe("Restore Tenant From Bin Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should restore data successfully with valid data", () => {
+  it("Should restore tenant from bin successfully", () => {
     // * Intercept get list bin API
     cy.intercept("GET", "**/api/v1/dashboard/bin?**").as("getListBin");
 
