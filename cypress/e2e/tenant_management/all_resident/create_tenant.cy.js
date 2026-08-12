@@ -17,7 +17,7 @@ describe("Create Tenant Spec", () => {
     let floor = faker.string.numeric(1);
     let unit = faker.string.numeric(1);
 
-    // * Open tenant management page first, then wait for table data
+    // * Click tenant management sidebar item
     cy.get("a[href='/dashboard/tenant']").should("exist").click();
     cy.url().should("include", "/dashboard/tenant");
     cy.wait(3000);

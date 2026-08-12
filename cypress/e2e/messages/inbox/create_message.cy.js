@@ -6,76 +6,55 @@ describe("Create Message Spec", () => {
   });
 
   it("Should create message successfully with valid data", () => {
-    let name = "Building " + faker.company.name() + " " + faker.string.numeric(4);
-    let street = faker.location.streetAddress();
-    let houseNumber = faker.string.numeric(2);
-    let postCode = faker.string.numeric(5);
+    let topic = "Test Topic " + faker.lorem.sentence();
+    let message = "Test Message " + faker.lorem.sentence();
 
-    // * Click on the plus button
-    cy.get("button:has(svg.lucide-plus)").should("exist").click();
-    cy.wait(1000);
-
-    // * Click on the building button
-    cy.get('button:has(img[alt="building"])').should("exist").click();
-    cy.url().should("include", "/dashboard/category/building/create");
+    // * Click message sidebar item
+    cy.get("a[href='/dashboard/message']").should("exist").click();
+    cy.url().should("include", "/dashboard/message");
     cy.wait(3000);
 
-    // * Type the name
-    cy.get("input[name='name']").should("exist").type(name).should("have.value", name);
+    // * Click on the plus button
+    cy.get("div.btn-multi").should("exist").click();
+    cy.url().should("include", "/dashboard/message/create");
+    cy.wait(3000);
+
+    cy.get("span.add-tenant").should("exist").click();
+    cy.wait(2000);
+
+    // * Click checkbox on the first tenant row
+    cy.get("#listTenantModal").should("be.visible").find("tbody tr").should("have.length.at.least", 1);
+    cy.get("#listTenantModal tbody tr").first().find('img[src*="icon-unselected-checkbox"]').should("exist").click();
     cy.wait(1000);
 
     // * Click on the next button
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    cy.get("#listTenantModal button.upload-button-next").should("exist").click();
     cy.wait(1000);
 
-    // * Type the street
-    cy.get("input[name='street']").should("exist").type(street).should("have.value", street);
+    // * Click on the done button
+    cy.get("#listSelectedTenantModal button.upload-button-next").should("exist").click();
     cy.wait(1000);
 
-    // * Type the house number
-    cy.get("input[name='house_number']").should("exist").type(houseNumber).should("have.value", houseNumber);
+    // * Type the topic
+    cy.get("input[name='topic']").should("exist").type(topic).should("have.value", topic);
     cy.wait(1000);
 
-    // * Type the post code
-    cy.get("input[name='postcode']").should("exist").type(postCode).should("have.value", postCode);
+    // * Type the message
+    cy.get("input[name='message']").should("exist").type(message).should("have.value", message);
     cy.wait(1000);
 
-    // * Intercept get city API
-    cy.intercept("GET", "**/api/v1/master-data/city**").as("getCity");
+    // * Intercept create message API
+    cy.intercept("POST", "**/api/v1/dashboard/broadcast-message").as("createMessage");
 
-    // * Click on city select button
-    cy.get("div.input-custom.mt-3.py-2").filter(':has(img[alt="required"])').first().click();
-    cy.wait(2000);
+    // * Click on the done button
+    cy.get("button.btn-send-message").should("exist").click();
 
-    // * Wait for get city API to be called
-    cy.wait("@getCity")
+    // * Wait for create category API to be called
+    cy.wait("@createMessage")
       .its("response")
       .should((response) => {
         expect(response.statusCode).to.eq(200);
         expect(response.body).to.deep.include({ status: true });
-        expect(response.body.data).to.exist.and.not.be.empty;
-      });
-
-    // * Wait for the city modal to be visible
-    cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
-
-    // * Click on the first city in the list
-    cy.get("#listCityModal tbody tr").first().click();
-    cy.wait(1000);
-
-    // * Intercept create building API
-    cy.intercept("POST", "**/api/v1/dashboard/building").as("createBuilding");
-
-    // * Click on the Done button
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
-
-    // * Wait for create building API to be called
-    cy.wait("@createBuilding")
-      .its("response")
-      .should((response) => {
-        expect(response.statusCode).to.eq(200);
-        expect(response.body).to.deep.include({ status: true });
-        expect(response.body.data).to.exist.and.not.be.empty;
       });
   });
 });
