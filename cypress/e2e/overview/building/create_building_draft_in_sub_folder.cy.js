@@ -1,23 +1,35 @@
 import { faker } from "@faker-js/faker";
 
-describe("Create Building Spec", () => {
+describe("Create Building Draft in Sub Folder Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should create building successfully", () => {
+  it("Should create building draft in sub folder successfully", () => {
     let name = "Building " + faker.company.name() + " " + faker.string.numeric(4);
     let street = faker.location.streetAddress();
     let houseNumber = faker.string.numeric(2);
     let postCode = faker.string.numeric(5);
 
-    // * Click on plus button
-    cy.get("button:has(svg.lucide-plus)").should("exist").click();
-    cy.wait(1000);
+    // * Click first folder in the list
+    cy.get('a[href^="/dashboard/category/"]')
+      .filter((_i, el) => /^\/dashboard\/category\/\d+$/.test(el.getAttribute("href") || ""))
+      .should("have.length.at.least", 1)
+      .first()
+      .click();
+    cy.url().should("match", /\/dashboard\/category\/\d+/);
+    cy.wait(3000);
 
-    // * Click on building button
-    cy.get('button:has(img[alt="building"])').should("exist").click();
-    cy.url().should("include", "/dashboard/category/building/create");
+    // * Click Add Building button
+    cy.get("a")
+      .filter((_i, el) => {
+        const href = el.getAttribute("href") || "";
+        return /\/dashboard\/category\/\d+\/subcategory\/\d+\/building\/create(?:\?|$)/.test(href);
+      })
+      .should("have.length.at.least", 1)
+      .first()
+      .click();
+    cy.url().should("match", /\/dashboard\/category\/\d+\/subcategory\/\d+\/building\/create/);
     cy.wait(3000);
 
     // * Type name
@@ -61,14 +73,14 @@ describe("Create Building Spec", () => {
     cy.get("#listCityModal tbody tr").first().click();
     cy.wait(1000);
 
-    // * Intercept create building API
-    cy.intercept("POST", "**/api/v1/dashboard/building").as("createBuilding");
+    // * Intercept create draft API
+    cy.intercept("POST", "**/api/v1/dashboard/draft").as("createDraft");
 
-    // * Click on done button
-    cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
+    // * Click on save draft button
+    cy.get("button.upload-button-skip:visible:enabled").should("have.length", 1).click();
 
-    // * Wait for create building API to be called
-    cy.wait("@createBuilding")
+    // * Wait for create draft API to be called
+    cy.wait("@createDraft")
       .its("response")
       .should((response) => {
         expect(response.statusCode).to.eq(200);

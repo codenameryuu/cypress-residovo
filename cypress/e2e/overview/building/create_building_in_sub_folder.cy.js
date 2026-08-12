@@ -1,23 +1,35 @@
 import { faker } from "@faker-js/faker";
 
-describe("Create Building Spec", () => {
+describe("Create Building in Folder Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should create building successfully", () => {
+  it("Should create building in folder successfully", () => {
     let name = "Building " + faker.company.name() + " " + faker.string.numeric(4);
     let street = faker.location.streetAddress();
     let houseNumber = faker.string.numeric(2);
     let postCode = faker.string.numeric(5);
 
-    // * Click on plus button
-    cy.get("button:has(svg.lucide-plus)").should("exist").click();
-    cy.wait(1000);
+    // * Click first folder in the list
+    cy.get('a[href^="/dashboard/category/"]')
+      .filter((_i, el) => /^\/dashboard\/category\/\d+$/.test(el.getAttribute("href") || ""))
+      .should("have.length.at.least", 1)
+      .first()
+      .click();
+    cy.url().should("match", /\/dashboard\/category\/\d+/);
+    cy.wait(3000);
 
-    // * Click on building button
-    cy.get('button:has(img[alt="building"])').should("exist").click();
-    cy.url().should("include", "/dashboard/category/building/create");
+    // * Click Add Building button
+    cy.get("a")
+      .filter((_i, el) => {
+        const href = el.getAttribute("href") || "";
+        return /\/dashboard\/category\/\d+\/subcategory\/\d+\/building\/create(?:\?|$)/.test(href);
+      })
+      .should("have.length.at.least", 1)
+      .first()
+      .click();
+    cy.url().should("match", /\/dashboard\/category\/\d+\/subcategory\/\d+\/building\/create/);
     cy.wait(3000);
 
     // * Type name

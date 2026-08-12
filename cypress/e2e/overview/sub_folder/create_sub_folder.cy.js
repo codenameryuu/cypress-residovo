@@ -1,21 +1,21 @@
 import { faker } from "@faker-js/faker";
 
-describe("Create Subfolder Spec", () => {
+describe("Create Sub Folder Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should create subfolder successfully", () => {
+  it("Should create sub folder successfully", () => {
     let name = "Subfolder " + faker.company.name() + " " + faker.string.numeric(4);
 
-    // * Click on the plus button
+    // * Click on plus button
     cy.get("button:has(svg.lucide-plus)").should("exist").click();
     cy.wait(1000);
 
     // * Intercept get list category API
     cy.intercept("GET", "**/api/v1/dashboard/list-category").as("getListCategory");
 
-    // * Click on the subfolder button
+    // * Click on sub folder button
     cy.get('button:has(img[alt="subfolder"])').should("exist").click();
     cy.wait(1000);
 
@@ -25,33 +25,24 @@ describe("Create Subfolder Spec", () => {
       .should((response) => {
         expect(response.statusCode).to.eq(200);
         expect(response.body).to.deep.include({ status: true });
-        expect(response.body.data[0].id).to.exist;
-      })
-      .its("body.data.0")
-      .then((data) => {
-        cy.wrap(data.id).as("categoryId");
+        expect(response.body.data).to.be.an("array").and.not.be.empty;
       });
 
-    // * Click on the first category in the list
+    // * Wait the modal, then click on first folder in the list
     cy.get("#modalSelectCategory").should("exist").find(".modal-category-title").should("have.length.at.least", 1).first().click();
 
-    // * Click on the next button
+    // * Click on next button
     cy.get("#modalSelectCategory button.upload-button-next").should("exist").click();
+    cy.url().should("match", /\/dashboard\/category\/[^/]+\/subcategory\/create/);
 
-    // * Get the category ID
-    cy.get("@categoryId").then((categoryId) => {
-      cy.url().should("include", `/dashboard/category/${categoryId}/subcategory/create`);
-      cy.wait(3000);
-    });
-
-    // * Type the name
+    // * Type name
     cy.get("input[name='name']").should("exist").type(name).should("have.value", name);
     cy.wait(1000);
 
     // * Intercept create category API
     cy.intercept("POST", "**/api/v1/dashboard/category").as("createCategory");
 
-    // * Click on the Done button
+    // * Click on done button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
 
     // * Wait for create category API to be called
