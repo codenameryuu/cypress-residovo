@@ -48,7 +48,7 @@ describe("Create Tenant Spec", () => {
 
     // * Confirm selection and wait for create tenant page
     cy.get("#modalSelectBuildingDocument button.upload-button-next").should("exist").click();
-    cy.url().should("match", /\/dashboard\/category\/building\/\d+\/tenant\/create/);
+    cy.url().should("match", /\/dashboard\/category\/(?:\d+\/)?building\/\d+\/tenant\/create/);
     cy.wait(5000);
 
     // * Type first name
@@ -98,52 +98,102 @@ describe("Create Tenant Spec", () => {
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
 
-    // * Type street
-    cy.get("input[name='street']").should("exist").type(street).should("have.value", street);
-    cy.wait(1000);
-
-    // * Type house number
-    cy.get("input[name='house_number']").should("exist").type(houseNumber).should("have.value", houseNumber);
-    cy.wait(1000);
-
-    // * Type post code
-    cy.get("input[name='postcode']").should("exist").type(postCode).should("have.value", postCode);
-    cy.wait(1000);
-
-    // * Intercept get city API
-    cy.intercept("GET", "**/api/v1/master-data/city**").as("getCity");
-
-    // * Click on city select button
-    cy.get("div.input-custom.mt-3.py-2").filter(':has(img[alt="required"])').first().click();
-    cy.wait(2000);
-
-    // * Wait for get city API to be called
-    cy.wait("@getCity")
-      .its("response")
-      .should((response) => {
-        expect(response.statusCode).to.eq(200);
-        expect(response.body).to.deep.include({ status: true });
-        expect(response.body.data).to.exist.and.not.be.empty;
+    // * If street is empty, type a new street
+    cy.get("input[name='street']")
+      .should("exist")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='street']").type(street).should("have.value", street);
+          cy.wait(1000);
+        }
       });
 
-    // * Wait for city modal to be visible
-    cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
+    // * If house number is empty, type a new house number
+    cy.get("input[name='house_number']")
+      .should("exist")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='house_number']").type(houseNumber).should("have.value", houseNumber);
+          cy.wait(1000);
+        }
+      });
 
-    // * Click on first item in the list
-    cy.get("#listCityModal tbody tr").first().click();
-    cy.wait(1000);
+    // * If post code is empty, type a new post code
+    cy.get("input[name='postcode']")
+      .should("exist")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='postcode']").type(postCode).should("have.value", postCode);
+          cy.wait(1000);
+        }
+      });
 
-    // * Type floor
-    cy.get("input[name='floor']").should("exist").type(floor).should("have.value", floor);
-    cy.wait(1000);
+    // * If city is empty, select a city
+    cy.get("input[name='city']")
+      .should("exist")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          // * Intercept get city API
+          cy.intercept("GET", "**/api/v1/master-data/city**").as("getCity");
 
-    // * Type unit
-    cy.get("input[name='unit']").should("exist").type(unit).should("have.value", unit);
-    cy.wait(1000);
+          // * Click on city select button
+          cy.get("div.input-custom.mt-3.py-2").filter(':has(img[alt="required"])').first().click();
+          cy.wait(2000);
+
+          // * Wait for get city API to be called
+          cy.wait("@getCity")
+            .its("response")
+            .should((response) => {
+              expect(response.statusCode).to.eq(200);
+              expect(response.body).to.deep.include({ status: true });
+              expect(response.body.data).to.exist.and.not.be.empty;
+            });
+
+          // * Wait modal, then click on first city in the list
+          cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
+          cy.get("#listCityModal tbody tr").first().click();
+          cy.wait(1000);
+        }
+      });
+
+    // * If floor is empty, type a new floor
+    cy.get("input[name='floor']")
+      .should("exist")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='floor']").type(floor).should("have.value", floor);
+          cy.wait(1000);
+        }
+      });
+
+    // * If unit is empty, type a new unit
+    cy.get("input[name='unit']")
+      .should("exist")
+      .invoke("val")
+      .then((value) => {
+        if (!value) {
+          cy.get("input[name='unit']").type(unit).should("have.value", unit);
+          cy.wait(1000);
+        }
+      });
 
     // * Click on done button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
+
+    // * Make sure the send email checkbox is not checked
+    cy.get("#tenantInvitationModal").should("exist");
+    cy.get('#tenantInvitationModal img[src*="icon-checked"]').then(($checked) => {
+      if ($checked.length) {
+        cy.wrap($checked).first().click();
+        cy.wait(1000);
+      }
+    });
 
     // * Intercept create tenant API
     cy.intercept("POST", "**/api/v1/dashboard/tenant").as("createTenant");
