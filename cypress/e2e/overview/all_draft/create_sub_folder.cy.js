@@ -3,6 +3,8 @@ import { faker } from "@faker-js/faker";
 describe("Create Sub Folder From Draft Spec", () => {
   beforeEach(() => {
     cy.login();
+    cy.createSubFolderDraft();
+    cy.wait(3000);
   });
 
   it("Should create sub folder from draft successfully", () => {

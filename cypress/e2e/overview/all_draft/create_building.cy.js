@@ -3,6 +3,8 @@ import { faker } from "@faker-js/faker";
 describe("Create Building From Draft Spec", () => {
   beforeEach(() => {
     cy.login();
+    cy.createBuildingDraft();
+    cy.wait(3000);
   });
 
   it("Should create building from draft successfully", () => {
