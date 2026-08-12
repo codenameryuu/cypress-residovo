@@ -5,7 +5,7 @@ describe("Create Folder Spec", () => {
     cy.login();
   });
 
-  it("Should create folder successfully with valid data", () => {
+  it("Should create folder draft successfully", () => {
     let name = "Folder " + faker.company.name() + " " + faker.string.numeric(4);
 
     // * Click on the plus button

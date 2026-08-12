@@ -5,7 +5,7 @@ describe("Create Subfolder Spec", () => {
     cy.login();
   });
 
-  it("Should create subfolder successfully with valid data", () => {
+  it("Should create subfolder draft successfully", () => {
     let name = "Subfolder " + faker.company.name() + " " + faker.string.numeric(4);
 
     // * Click on the plus button

@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
 
-describe("Create Building Spec", () => {
+describe("Create Message Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should create building successfully", () => {
+  it("Should create message successfully with valid data", () => {
     let name = "Building " + faker.company.name() + " " + faker.string.numeric(4);
     let street = faker.location.streetAddress();
     let houseNumber = faker.string.numeric(2);

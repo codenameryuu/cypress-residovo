@@ -5,7 +5,7 @@ describe("Create Building Spec", () => {
     cy.login();
   });
 
-  it("Should create building successfully with valid data", () => {
+  it("Should create building draft successfully", () => {
     let name = "Building " + faker.company.name() + " " + faker.string.numeric(4);
     let street = faker.location.streetAddress();
     let houseNumber = faker.string.numeric(2);
