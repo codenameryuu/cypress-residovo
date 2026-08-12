@@ -65,7 +65,7 @@ describe("Create Building Draft in Folder Spec", () => {
         expect(response.body.data).to.exist.and.not.be.empty;
       });
 
-    // * Wait the modal, then click on first city in the list
+    // * Wait modal, then click on first city in the list
     cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
     cy.get("#listCityModal tbody tr").first().click();
     cy.wait(1000);

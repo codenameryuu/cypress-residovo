@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
 
-describe("Delete Data Spec", () => {
+describe("Delete From Draft Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should delete data successfully with valid data", () => {
+  it("Should delete from draft successfully", () => {
     // * Intercept get list draft API
     cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
 
@@ -23,18 +23,18 @@ describe("Delete Data Spec", () => {
         expect(response.body.data.data).to.be.an("array").and.not.be.empty;
       });
 
-    // * Click checkbox on the first row
+    // * Click checkbox on first draft item
     cy.get(".ag-row .ag-selection-checkbox").should("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
-    // * Click on the delete button
-    cy.contains("button.button-bin", "Delete").should("exist").click();
+    // * Click on delete button
+    cy.get("button.button-bin:has(svg.lucide-trash2)").should("exist").click();
     cy.wait(1000);
 
     // * Intercept delete draft API
     cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
 
-    // * Click on the confirm button in modal
+    // * Wait modal, then click on confirm button
     cy.get("#updatetConfirmModal").should("exist").find("button.btn-danger").should("exist").click();
 
     // * Wait for delete draft API to be called

@@ -28,7 +28,7 @@ describe("Create Sub Folder Spec", () => {
         expect(response.body.data).to.be.an("array").and.not.be.empty;
       });
 
-    // * Wait the modal, then click on first folder in the list
+    // * Wait modal, then click on first folder in the list
     cy.get("#modalSelectCategory").should("exist").find(".modal-category-title").should("have.length.at.least", 1).first().click();
 
     // * Click on next button

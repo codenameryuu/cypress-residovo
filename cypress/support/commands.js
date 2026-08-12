@@ -17,11 +17,11 @@ Cypress.Commands.add("login", (email, password) => {
     .click();
   cy.wait(500);
 
-  // * Type the email
+  // * Type email
   cy.get("input[type='email']").should("exist").type(loginEmail).should("have.value", loginEmail);
   cy.wait(1000);
 
-  // * Type the password
+  // * Type password
   cy.get("input[type='password']").should("exist").type(loginPassword).should("have.value", loginPassword);
   cy.wait(1000);
 
@@ -41,6 +41,91 @@ Cypress.Commands.add("createBuildingDraft", () => {
   // * Click on building button
   cy.get('button:has(img[alt="building"])').should("exist").click();
   cy.url().should("include", "/dashboard/category/building/create");
+  cy.wait(3000);
+
+  // * Type name
+  cy.get("input[name='name']").should("exist").type(name).should("have.value", name);
+  cy.wait(1000);
+
+  // * Intercept create draft API
+  cy.intercept("POST", "**/api/v1/dashboard/draft").as("createDraft");
+
+  // * Click on save draft button
+  cy.get("button.upload-button-skip:visible:enabled").should("have.length", 1).click();
+
+  // * Wait for create draft API to be called
+  cy.wait("@createDraft")
+    .its("response")
+    .should((response) => {
+      expect(response.statusCode).to.eq(200);
+      expect(response.body).to.deep.include({ status: true });
+      expect(response.body.data).to.exist.and.not.be.empty;
+    });
+});
+
+Cypress.Commands.add("createBuildingDraftInFolder", () => {
+  let name = "Building " + faker.company.name() + " " + faker.string.numeric(4);
+
+  // * Click first folder in the list
+  cy.get('a[href^="/dashboard/category/"]')
+    .filter((_i, el) => /^\/dashboard\/category\/\d+$/.test(el.getAttribute("href") || ""))
+    .should("have.length.at.least", 1)
+    .first()
+    .click();
+  cy.url().should("match", /\/dashboard\/category\/\d+/);
+  cy.wait(3000);
+
+  // * Click on plus button
+  cy.get("button:has(svg.lucide-plus)").should("exist").click();
+  cy.wait(1000);
+
+  // * Click on building button
+  cy.get('button:has(img[alt="building"])').should("exist").click();
+  cy.url().should("match", /\/dashboard\/category\/[^/]+\/building\/create/);
+  cy.wait(3000);
+
+  // * Type name
+  cy.get("input[name='name']").should("exist").type(name).should("have.value", name);
+  cy.wait(1000);
+
+  // * Intercept create draft API
+  cy.intercept("POST", "**/api/v1/dashboard/draft").as("createDraft");
+
+  // * Click on save draft button
+  cy.get("button.upload-button-skip:visible:enabled").should("have.length", 1).click();
+
+  // * Wait for create draft API to be called
+  cy.wait("@createDraft")
+    .its("response")
+    .should((response) => {
+      expect(response.statusCode).to.eq(200);
+      expect(response.body).to.deep.include({ status: true });
+      expect(response.body.data).to.exist.and.not.be.empty;
+    });
+});
+
+Cypress.Commands.add("createBuildingDraftInSubFolder", () => {
+  let name = "Building " + faker.company.name() + " " + faker.string.numeric(4);
+
+  // * Click first folder in the list
+  cy.get('a[href^="/dashboard/category/"]')
+    .filter((_i, el) => /^\/dashboard\/category\/\d+$/.test(el.getAttribute("href") || ""))
+    .should("have.length.at.least", 1)
+    .first()
+    .click();
+  cy.url().should("match", /\/dashboard\/category\/\d+/);
+  cy.wait(3000);
+
+  // * Click Add Building button
+  cy.get("a")
+    .filter((_i, el) => {
+      const href = el.getAttribute("href") || "";
+      return /\/dashboard\/category\/\d+\/subcategory\/\d+\/building\/create(?:\?|$)/.test(href);
+    })
+    .should("have.length.at.least", 1)
+    .first()
+    .click();
+  cy.url().should("match", /\/dashboard\/category\/\d+\/subcategory\/\d+\/building\/create/);
   cy.wait(3000);
 
   // * Type name
@@ -118,7 +203,7 @@ Cypress.Commands.add("createSubFolderDraft", () => {
       expect(response.body.data).to.be.an("array").and.not.be.empty;
     });
 
-  // * Wait the modal, then click on first folder in the list
+  // * Wait modal, then click on first folder in the list
   cy.get("#modalSelectCategory").should("exist").find(".modal-category-title").should("have.length.at.least", 1).first().click();
 
   // * Click on next button

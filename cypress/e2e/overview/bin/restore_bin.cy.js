@@ -1,15 +1,15 @@
 import { faker } from "@faker-js/faker";
 
-describe("Restore Data Spec", () => {
+describe("Restore From Bin Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should restore data successfully with valid data", () => {
+  it("Should restore from bin successfully", () => {
     // * Intercept get list bin API
     cy.intercept("GET", "**/api/v1/dashboard/bin?**").as("getListBin");
 
-    // * Click on the all drafts sidebar item
+    // * Click on bin sidebar item
     cy.get("a[href='/dashboard/category/bin']").should("exist").click();
     cy.url().should("include", "/dashboard/category/bin");
     cy.wait(3000);
@@ -23,18 +23,18 @@ describe("Restore Data Spec", () => {
         expect(response.body.data.data).to.be.an("array").and.not.be.empty;
       });
 
-    // * Click first data on the table
+    // * Click checkbox on first bin item
     cy.get(".ag-row .ag-selection-checkbox").should("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
-    // * Click on the restore button
+    // * Click on restore button
     cy.get("button.button-bin:has(svg.lucide-archive-restore)").should("exist").click();
     cy.wait(1000);
 
     // * Intercept restore bin API
     cy.intercept("DELETE", "**/api/v1/dashboard/restore-bin").as("restoreBin");
 
-    // * Click on the confirm button in modal
+    // * Wait modal, then click on confirm button
     cy.get("#updatetConfirmModal").should("exist").find("button.upload-button-next").should("exist").click();
 
     // * Wait for restore bin API to be called

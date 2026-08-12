@@ -3,11 +3,11 @@ import { faker } from "@faker-js/faker";
 const baseUrl = Cypress.expose("BASE_URL");
 
 describe("Login Spec", () => {
-  it("Should log in successfully with valid credentials", () => {
+  it("Should login successfully", () => {
     cy.login();
   });
 
-  it("Should log in failed with invalid credentials", () => {
+  it("Should login failed", () => {
     let loginUrl = baseUrl + "/login";
 
     let email = faker.internet.email();
@@ -20,11 +20,11 @@ describe("Login Spec", () => {
     cy.visit(loginUrl);
     cy.wait(2000);
 
-    // * Type the email
+    // * Type email
     cy.get("input[type='email']").should("exist").type(email).should("have.value", email);
     cy.wait(1000);
 
-    // * Type the password
+    // * Type password
     cy.get("input[type='password']").should("exist").type(password).should("have.value", password);
     cy.wait(1000);
 

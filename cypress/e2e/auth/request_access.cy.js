@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 const baseUrl = Cypress.expose("BASE_URL");
 
 describe("Request Access Spec", () => {
-  it("Should log in successfully with valid data", () => {
+  it("Should request access successfully", () => {
     let requestAccessUrl = baseUrl + "/register";
 
     let firstName = faker.person.firstName();
@@ -17,26 +17,26 @@ describe("Request Access Spec", () => {
     cy.visit(requestAccessUrl);
     cy.wait(2000);
 
-    // * Type the name
+    // * Type name
     cy.get("input[type='name']").should("exist").type(fullName).should("have.value", fullName);
     cy.wait(1000);
 
-    // * Type the company name
+    // * Type company name
     cy.get("input[type='company']").should("exist").type(companyName).should("have.value", companyName);
     cy.wait(1000);
 
-    // * Type the email
+    // * Type email
     cy.get("input[type='email']").should("exist").type(email).should("have.value", email);
     cy.wait(1000);
 
-    // * Type the phone number
+    // * Type phone number
     cy.get("input[name='phone']").should("exist").type(phoneNumber).should("have.value", phoneNumber);
     cy.wait(1000);
 
     // * Intercept request access API
     cy.intercept("POST", "**/api/v1/request-access").as("requestAccessRequest");
 
-    // * Click on register button
+    // * Click on request access button
     cy.get("button[type='submit']").should("exist").click();
 
     // * Wait for request access API to be called
@@ -48,7 +48,7 @@ describe("Request Access Spec", () => {
       });
   });
 
-  it("Should log in failed with invalid credentials", () => {
+  it("Should request access failed", () => {
     let requestAccessUrl = baseUrl + "/register";
 
     let firstName = faker.person.firstName();
@@ -62,26 +62,26 @@ describe("Request Access Spec", () => {
     cy.visit(requestAccessUrl);
     cy.wait(2000);
 
-    // * Type the name
+    // * Type name
     cy.get("input[type='name']").should("exist").type(fullName).should("have.value", fullName);
     cy.wait(1000);
 
-    // * Type the company name
+    // * Type company name
     cy.get("input[type='company']").should("exist").type(companyName).should("have.value", companyName);
     cy.wait(1000);
 
-    // * Type the email
+    // * Type email
     cy.get("input[type='email']").should("exist").type(email).should("have.value", email);
     cy.wait(1000);
 
-    // * Type the phone number
+    // * Type phone number
     cy.get("input[name='phone']").should("exist").type(phoneNumber).should("have.value", phoneNumber);
     cy.wait(1000);
 
     // * Intercept request access API
     cy.intercept("POST", "**/api/v1/request-access").as("requestAccessRequest");
 
-    // * Click on register button
+    // * Click on request access button
     cy.get("button[type='submit']").should("exist").click();
 
     // * Wait for request access API to be called

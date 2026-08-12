@@ -1,13 +1,13 @@
 import { faker } from "@faker-js/faker";
 
-describe("Create Building From Draft in Folder Spec", () => {
+describe("Create Building From Draft in Sub Folder Spec", () => {
   beforeEach(() => {
     cy.login();
-    cy.createBuildingDraftInFolder();
+    cy.createBuildingDraftInSubFolder();
     cy.wait(3000);
   });
 
-  it("Should create building from draft in folder successfully", () => {
+  it("Should create building from draft in sub folder successfully", () => {
     let name = "Building " + faker.company.name() + " " + faker.string.numeric(4);
     let street = faker.location.streetAddress();
     let houseNumber = faker.string.numeric(2);
@@ -31,16 +31,16 @@ describe("Create Building From Draft in Folder Spec", () => {
         expect(response.body.data.data[0].sub_type).to.exist;
       });
 
-    // * Click first building draft in folder
+    // * Click first building draft in sub folder
     cy.get(".ag-center-cols-container .ag-row a")
       .filter((_i, el) => {
         const href = el.getAttribute("href") || "";
-        return /\/dashboard\/category\/\d+\/building\/create(?:\?|$)/.test(href);
+        return /\/dashboard\/category\/\d+\/subcategory\/\d+\/building\/create(?:\?|$)/.test(href);
       })
       .should("have.length.at.least", 1)
       .first()
       .click();
-    cy.url().should("match", /\/dashboard\/category\/\d+\/building\/create/);
+    cy.url().should("match", /\/dashboard\/category\/\d+\/subcategory\/\d+\/building\/create/);
     cy.wait(3000);
 
     // * If name is empty, type a new name
