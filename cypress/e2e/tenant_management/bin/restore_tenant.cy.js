@@ -9,11 +9,11 @@ describe("Restore Tenant From Bin Spec", () => {
     // * Intercept get list bin API
     cy.intercept("GET", "**/api/v1/dashboard/bin?**").as("getListBin");
 
-    // * Click on the tenant management sidebar item
+    // * Click on tenant management sidebar menu
     cy.get("a[href='/dashboard/tenant']").should("exist").click();
     cy.wait(1000);
 
-    // * Click on the bin sidebar item
+    // * Click on bin sidebar menu
     cy.get("a[href='/dashboard/tenant/bin']").should("exist").click();
     cy.url().should("include", "/dashboard/tenant/bin");
     cy.wait(3000);
@@ -27,18 +27,18 @@ describe("Restore Tenant From Bin Spec", () => {
         expect(response.body.data.data).to.be.an("array").and.not.be.empty;
       });
 
-    // * Click first data on the table
+    // * Click first item in the table
     cy.get(".ag-row .ag-selection-checkbox").should("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
-    // * Click on the restore button
+    // * Click on restore button
     cy.get("button.button-bin:has(svg.lucide-archive-restore)").should("exist").click();
     cy.wait(1000);
 
     // * Intercept restore bin API
     cy.intercept("DELETE", "**/api/v1/dashboard/restore-bin").as("restoreBin");
 
-    // * Click on the confirm button in modal
+    // * Click on restore button in modal
     cy.get("#updatetConfirmModal").should("exist").find("button.upload-button-next").should("exist").click();
 
     // * Wait for restore bin API to be called

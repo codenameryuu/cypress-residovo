@@ -13,7 +13,7 @@ describe("Login Spec", () => {
     let email = faker.internet.email();
     let password = faker.internet.password();
 
-    // * Intercept login request
+    // * Intercept login API
     cy.intercept("POST", "**/api/auth/callback/credentials").as("loginRequest");
 
     // * Visit login page
@@ -32,7 +32,7 @@ describe("Login Spec", () => {
     cy.get("button[type='submit']").should("exist").click();
     cy.url().should("include", "/login");
 
-    // * Wait for get login API to be called
+    // * Wait for login API to be called
     cy.wait("@loginRequest")
       .its("response")
       .should((response) => {

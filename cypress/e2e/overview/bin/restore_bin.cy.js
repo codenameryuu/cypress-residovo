@@ -9,7 +9,7 @@ describe("Restore From Bin Spec", () => {
     // * Intercept get list bin API
     cy.intercept("GET", "**/api/v1/dashboard/bin?**").as("getListBin");
 
-    // * Click on bin sidebar item
+    // * Click on bin sidebar menu
     cy.get("a[href='/dashboard/category/bin']").should("exist").click();
     cy.url().should("include", "/dashboard/category/bin");
     cy.wait(3000);
@@ -23,7 +23,7 @@ describe("Restore From Bin Spec", () => {
         expect(response.body.data.data).to.be.an("array").and.not.be.empty;
       });
 
-    // * Click checkbox on first bin item
+    // * Click checkbox on first item in the table
     cy.get(".ag-row .ag-selection-checkbox").should("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
@@ -34,7 +34,7 @@ describe("Restore From Bin Spec", () => {
     // * Intercept restore bin API
     cy.intercept("DELETE", "**/api/v1/dashboard/restore-bin").as("restoreBin");
 
-    // * Wait modal, then click on confirm button
+    // * Wait modal, then click on restore button
     cy.get("#updatetConfirmModal").should("exist").find("button.upload-button-next").should("exist").click();
 
     // * Wait for restore bin API to be called

@@ -17,12 +17,12 @@ describe("Create Tenant From Draft Spec", () => {
     let floor = faker.string.numeric(1);
     let unit = faker.string.numeric(1);
 
-    // * Intercept get list draft API
-    cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
-
     // * Click on the tenant management sidebar item
     cy.get("a[href='/dashboard/tenant']").should("exist").click();
     cy.wait(1000);
+
+    // * Intercept get list draft API
+    cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
 
     // * Click on the all drafts sidebar item
     cy.get("a[href='/dashboard/tenant/draft']").should("exist").click();
@@ -39,12 +39,12 @@ describe("Create Tenant From Draft Spec", () => {
         expect(response.body.data.data[0].sub_type).to.exist;
       });
 
-    // * Click first data on the table
+    // * Click first item in the table
     cy.get(".ag-center-cols-container .ag-row").should("have.length.at.least", 1).first().click();
     cy.url().should("match", /\/dashboard\/category\/(?:\d+\/)?building\/\d+\/tenant\/create/);
     cy.wait(5000);
 
-    // * If first name is empty, type a new first name
+    // * If first name is empty, type first name
     cy.get("input[name='first_name']")
       .should("exist")
       .invoke("val")
@@ -55,7 +55,7 @@ describe("Create Tenant From Draft Spec", () => {
         }
       });
 
-    // * If last name is empty, type a new last name
+    // * If last name is empty, type last name
     cy.get("input[name='last_name']")
       .should("exist")
       .invoke("val")
@@ -66,7 +66,7 @@ describe("Create Tenant From Draft Spec", () => {
         }
       });
 
-    // * If email is empty, type a new email
+    // * If email is empty, type email
     cy.get("input[name='email']")
       .should("exist")
       .invoke("val")
@@ -77,7 +77,7 @@ describe("Create Tenant From Draft Spec", () => {
         }
       });
 
-    // * If phone number is empty, type a new phone number
+    // * If phone number is empty, type phone number
     cy.get("input[name='phone']")
       .should("exist")
       .invoke("val")
@@ -98,7 +98,7 @@ describe("Create Tenant From Draft Spec", () => {
       expect(editor.getBody(), "tinymce body").to.exist;
     });
 
-    // * If note is empty, type a new note
+    // * If note is empty, type note
     cy.window().then((win) => {
       const editor = win.tinymce.activeEditor || win.tinymce.editors[0];
       const content = (editor.getContent({ format: "text" }) || "").trim();
@@ -123,11 +123,11 @@ describe("Create Tenant From Draft Spec", () => {
       }
     });
 
-    // * Click on the next button
+    // * Click on next button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
 
-    // * If street is empty, type a new street
+    // * If street is empty, type street
     cy.get("input[name='street']")
       .should("exist")
       .invoke("val")
@@ -138,7 +138,7 @@ describe("Create Tenant From Draft Spec", () => {
         }
       });
 
-    // * If house number is empty, type a new house number
+    // * If house number is empty, type house number
     cy.get("input[name='house_number']")
       .should("exist")
       .invoke("val")
@@ -149,7 +149,7 @@ describe("Create Tenant From Draft Spec", () => {
         }
       });
 
-    // * If post code is empty, type a new post code
+    // * If post code is empty, type post code
     cy.get("input[name='postcode']")
       .should("exist")
       .invoke("val")
@@ -160,7 +160,7 @@ describe("Create Tenant From Draft Spec", () => {
         }
       });
 
-    // * If city is empty, select a city
+    // * If city is empty, select city
     cy.get("input[name='city']")
       .should("exist")
       .invoke("val")
@@ -185,13 +185,13 @@ describe("Create Tenant From Draft Spec", () => {
           // * Wait for the city modal to be visible
           cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
 
-          // * Click on first city in the list
+          // * Click on first city in the table
           cy.get("#listCityModal tbody tr").first().click();
           cy.wait(1000);
         }
       });
 
-    // * Click on the next button
+    // * Click on next button
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
 
@@ -207,7 +207,7 @@ describe("Create Tenant From Draft Spec", () => {
     // * Intercept create tenant API
     cy.intercept("POST", "**/api/v1/dashboard/tenant").as("createTenant");
 
-    // * Click on the Done button
+    // * Click on done button
     cy.get("#tenantInvitationModal button.upload-button-next").should("exist").click();
 
     // * Wait for create tenant API to be called

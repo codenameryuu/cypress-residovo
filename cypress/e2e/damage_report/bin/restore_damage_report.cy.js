@@ -1,21 +1,21 @@
 import { faker } from "@faker-js/faker";
 
-describe("Restore Message From Bin Spec", () => {
+describe("Restore Damage Report From Bin Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should restore message from bin successfully", () => {
+  it("Should restore damage report from bin successfully", () => {
+    // * Click on damage report sidebar menu
+    cy.get("a[href='/dashboard/damage-report']").should("exist").click();
+    cy.wait(1000);
+
     // * Intercept get list bin API
     cy.intercept("GET", "**/api/v1/dashboard/bin?**").as("getListBin");
 
-    // * Click on message sidebar menu
-    cy.get("a[href='/dashboard/message']").should("exist").click();
-    cy.wait(1000);
-
     // * Click on bin sidebar menu
-    cy.get("a[href='/dashboard/message/bin']").should("exist").click();
-    cy.url().should("include", "/dashboard/message/bin");
+    cy.get("a[href='/dashboard/damage-report/bin']").should("exist").click();
+    cy.url().should("include", "/dashboard/damage-report/bin");
     cy.wait(3000);
 
     // * Wait for get list bin API to be called

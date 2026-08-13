@@ -1,17 +1,21 @@
 import { faker } from "@faker-js/faker";
 
-describe("Delete From Draft Spec", () => {
+describe("Delete Damage Report From Draft Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should delete from draft successfully", () => {
+  it("Should delete damage report from draft successfully", () => {
+    // * Click on damage report sidebar menu
+    cy.get("a[href='/dashboard/damage-report']").should("exist").click();
+    cy.wait(1000);
+
     // * Intercept get list draft API
     cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
 
     // * Click on all drafts sidebar menu
-    cy.get("a[href='/dashboard/category/draft']").should("exist").click();
-    cy.url().should("include", "/dashboard/category/draft");
+    cy.get("a[href='/dashboard/damage-report/draft']").should("exist").click();
+    cy.url().should("include", "/dashboard/damage-report/draft");
     cy.wait(3000);
 
     // * Wait for get list draft API to be called
@@ -34,7 +38,7 @@ describe("Delete From Draft Spec", () => {
     // * Intercept delete draft API
     cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
 
-    // * Wait modal, then click on delete button
+    // * Click on confirm button in modal
     cy.get("#updatetConfirmModal").should("exist").find("button.btn-danger").should("exist").click();
 
     // * Wait for delete draft API to be called

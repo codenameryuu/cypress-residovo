@@ -13,7 +13,7 @@ describe("Create Folder From Draft Spec", () => {
     // * Intercept get list draft API
     cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
 
-    // * Click on all drafts sidebar item
+    // * Click on all drafts sidebar menu
     cy.get("a[href='/dashboard/category/draft']").should("exist").click();
     cy.url().should("include", "/dashboard/category/draft");
     cy.wait(3000);
@@ -33,7 +33,7 @@ describe("Create Folder From Draft Spec", () => {
     cy.url().should("include", "/dashboard/category/create");
     cy.wait(3000);
 
-    // * If name is empty, type a new name
+    // * If name is empty, type name
     cy.get("input[name='name']")
       .should("exist")
       .invoke("val")

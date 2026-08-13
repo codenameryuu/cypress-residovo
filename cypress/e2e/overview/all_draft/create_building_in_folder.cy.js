@@ -16,7 +16,7 @@ describe("Create Building From Draft in Folder Spec", () => {
     // * Intercept get list draft API
     cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
 
-    // * Click on all drafts sidebar item
+    // * Click on all drafts sidebar menu
     cy.get("a[href='/dashboard/category/draft']").should("exist").click();
     cy.url().should("include", "/dashboard/category/draft");
     cy.wait(3000);
@@ -43,7 +43,7 @@ describe("Create Building From Draft in Folder Spec", () => {
     cy.url().should("match", /\/dashboard\/category\/\d+\/building\/create/);
     cy.wait(3000);
 
-    // * If name is empty, type a new name
+    // * If name is empty, type name
     cy.get("input[name='name']")
       .should("exist")
       .invoke("val")
@@ -58,7 +58,7 @@ describe("Create Building From Draft in Folder Spec", () => {
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
 
-    // * If street is empty, type a new street
+    // * If street is empty, type street
     cy.get("input[name='street']")
       .should("exist")
       .invoke("val")
@@ -69,7 +69,7 @@ describe("Create Building From Draft in Folder Spec", () => {
         }
       });
 
-    // * If house number is empty, type a new house number
+    // * If house number is empty, type house number
     cy.get("input[name='house_number']")
       .should("exist")
       .invoke("val")
@@ -80,7 +80,7 @@ describe("Create Building From Draft in Folder Spec", () => {
         }
       });
 
-    // * If post code is empty, type a new post code
+    // * If post code is empty, type post code
     cy.get("input[name='postcode']")
       .should("exist")
       .invoke("val")
@@ -91,7 +91,7 @@ describe("Create Building From Draft in Folder Spec", () => {
         }
       });
 
-    // * If city is empty, select a city
+    // * If city is empty, select city
     cy.get("input[name='city']")
       .should("exist")
       .invoke("val")
@@ -113,7 +113,7 @@ describe("Create Building From Draft in Folder Spec", () => {
               expect(response.body.data).to.exist.and.not.be.empty;
             });
 
-          // * Wait modal, then click on first city in the list
+          // * Wait modal, then click on first city in the table
           cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
           cy.get("#listCityModal tbody tr").first().click();
           cy.wait(1000);

@@ -1,21 +1,25 @@
 import { faker } from "@faker-js/faker";
 
-describe("Delete From Draft Spec", () => {
+describe("Delete Damage Report From Bin Spec", () => {
   beforeEach(() => {
     cy.login();
   });
 
-  it("Should delete from draft successfully", () => {
-    // * Intercept get list draft API
-    cy.intercept("GET", "**/api/v1/dashboard/draft?**").as("getListDraft");
+  it("Should delete damage report from bin successfully", () => {
+    // * Click on damage report sidebar menu
+    cy.get("a[href='/dashboard/damage-report']").should("exist").click();
+    cy.wait(1000);
 
-    // * Click on all drafts sidebar menu
-    cy.get("a[href='/dashboard/category/draft']").should("exist").click();
-    cy.url().should("include", "/dashboard/category/draft");
+    // * Intercept get list bin API
+    cy.intercept("GET", "**/api/v1/dashboard/bin?**").as("getListBin");
+
+    // * Click on bin sidebar menu
+    cy.get("a[href='/dashboard/damage-report/bin']").should("exist").click();
+    cy.url().should("include", "/dashboard/damage-report/bin");
     cy.wait(3000);
 
-    // * Wait for get list draft API to be called
-    cy.wait("@getListDraft")
+    // * Wait for get list bin API to be called
+    cy.wait("@getListBin")
       .its("response")
       .should((response) => {
         expect(response.statusCode).to.eq(200);
@@ -31,14 +35,14 @@ describe("Delete From Draft Spec", () => {
     cy.get("button.button-bin:has(svg.lucide-trash2)").should("exist").click();
     cy.wait(1000);
 
-    // * Intercept delete draft API
-    cy.intercept("DELETE", "**/api/v1/dashboard/delete-draft").as("deleteDraft");
+    // * Intercept delete bin API
+    cy.intercept("DELETE", "**/api/v1/dashboard/delete-bin").as("deleteBin");
 
-    // * Wait modal, then click on delete button
+    // * Click on delete button in modal
     cy.get("#updatetConfirmModal").should("exist").find("button.btn-danger").should("exist").click();
 
-    // * Wait for delete draft API to be called
-    cy.wait("@deleteDraft")
+    // * Wait for delete bin API to be called
+    cy.wait("@deleteBin")
       .its("response")
       .should((response) => {
         expect(response.statusCode).to.eq(200);

@@ -17,7 +17,7 @@ describe("Create Tenant Spec", () => {
     let floor = faker.string.numeric(1);
     let unit = faker.string.numeric(1);
 
-    // * Click tenant management sidebar item
+    // * Click tenant management sidebar menu
     cy.get("a[href='/dashboard/tenant']").should("exist").click();
     cy.url().should("include", "/dashboard/tenant");
     cy.wait(3000);
@@ -38,15 +38,15 @@ describe("Create Tenant Spec", () => {
         expect(response.body.data.data).to.be.an("array").and.not.be.empty;
       });
 
-    // * Wait modal, then click on first item in the list
+    // * Wait modal, then click on first item in the table
     cy.get("#modalSelectBuildingDocument").should("exist").find(".modal-category-title").should("have.length.at.least", 1).first().click();
     cy.wait(1000);
 
-    // * Click on first building checkbox
+    // * Click on first building in the table
     cy.get("#modalSelectBuildingDocument .col-10.offset-2").should("have.length.at.least", 1).first().find("div").first().click();
     cy.wait(500);
 
-    // * Confirm selection and wait for create tenant page
+    // * Click on next button
     cy.get("#modalSelectBuildingDocument button.upload-button-next").should("exist").click();
     cy.url().should("match", /\/dashboard\/category\/(?:\d+\/)?building\/\d+\/tenant\/create/);
     cy.wait(5000);
@@ -98,7 +98,7 @@ describe("Create Tenant Spec", () => {
     cy.get("button.upload-button-next:visible:enabled").should("have.length", 1).click();
     cy.wait(1000);
 
-    // * If street is empty, type a new street
+    // * If street is empty, type street
     cy.get("input[name='street']")
       .should("exist")
       .invoke("val")
@@ -109,7 +109,7 @@ describe("Create Tenant Spec", () => {
         }
       });
 
-    // * If house number is empty, type a new house number
+    // * If house number is empty, type house number
     cy.get("input[name='house_number']")
       .should("exist")
       .invoke("val")
@@ -120,7 +120,7 @@ describe("Create Tenant Spec", () => {
         }
       });
 
-    // * If post code is empty, type a new post code
+    // * If post code is empty, type post code
     cy.get("input[name='postcode']")
       .should("exist")
       .invoke("val")
@@ -131,7 +131,7 @@ describe("Create Tenant Spec", () => {
         }
       });
 
-    // * If city is empty, select a city
+    // * If city is empty, select city
     cy.get("input[name='city']")
       .should("exist")
       .invoke("val")
@@ -153,14 +153,14 @@ describe("Create Tenant Spec", () => {
               expect(response.body.data).to.exist.and.not.be.empty;
             });
 
-          // * Wait modal, then click on first city in the list
+          // * Wait modal, then click on first city in the table
           cy.get("#listCityModal").should("exist").find("tbody tr").should("have.length.at.least", 1);
           cy.get("#listCityModal tbody tr").first().click();
           cy.wait(1000);
         }
       });
 
-    // * If floor is empty, type a new floor
+    // * If floor is empty, type floor
     cy.get("input[name='floor']")
       .should("exist")
       .invoke("val")
@@ -171,7 +171,7 @@ describe("Create Tenant Spec", () => {
         }
       });
 
-    // * If unit is empty, type a new unit
+    // * If unit is empty, type unit
     cy.get("input[name='unit']")
       .should("exist")
       .invoke("val")
