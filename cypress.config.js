@@ -5,7 +5,7 @@ module.exports = defineConfig({
   reporter: "cypress-mochawesome-reporter",
   reporterOptions: {
     charts: true,
-    reportPageTitle: "Cypress Residovo",
+    reportPageTitle: "Cypress Mycondo Residovo",
     embeddedScreenshots: true,
     inlineAssets: true,
     saveAllAttempts: false,
@@ -14,7 +14,9 @@ module.exports = defineConfig({
     viewportWidth: 1600,
     viewportHeight: 900,
     expose: {
-      BASE_URL: "https://stg.residovo.com",
+      BASE_URL: "https://mycondofe.kuningan.de",
+      BASE_URL_MYCONDO: "https://mycondofe.kuningan.de",
+      BASE_URL_RESIDOVO: "https://stg.residovo.com",
       ACCOUNT_EMAIL: "mycondosite@gmail.com",
       ACCOUNT_PASSWORD: "Mycondo12321!",
     },
